@@ -1,0 +1,37 @@
+Function in Module:
+'1. EssGetConnected
+'======================================================================
+
+Public Function EssGetConnected(wsEssConnectionValues As Worksheet, _
+                             wsEssConnect As Worksheet) As Long
+
+    'Declare variables
+        Dim x As Long
+        Dim EssUserName As Variant
+        Dim EssPassword As Variant
+        Dim EssServer As Variant
+        Dim EssApplication As Variant
+        Dim EssDatabase As Variant
+        
+    'Get Essbase values for connection
+        With wsEssConnectionValues
+            EssUserName = .range("A1").Value
+            EssPassword = .range("A2").Value
+            EssServer = .range("A3").Value
+            EssApplication = .range("A4").Value
+            EssDatabase = .range("A5").Value
+        End With
+        
+    'Connect to Essbase
+        x = EssVConnect(sheetName:=wsEssConnect.Name, _
+                        username:=EssUserName, _
+                        password:=EssPassword, _
+                        server:=EssServer, _
+                        application:=EssApplication, _
+                        database:=EssDatabase)
+                        
+    'Pass value to function
+        GetConnected = x
+        
+    
+End Function
