@@ -1,1 +1,37 @@
+Option Explicit
 
+Sub ClearDataResize()
+
+    Dim wb As Workbook
+    Dim ws As Worksheet
+    Dim lo As ListObject
+    Dim rng As Range
+    Dim lngRows As Long
+    Dim lngcolumns As Long
+    Dim FirstRow As Long
+    Dim FirstColumn As Long
+    Dim LastColumn As Long
+    
+    Set wb = ThisWorkbook
+    Set ws = wb.Worksheets("BGT")
+    
+    
+    With ws
+        For Each lo In .ListObjects
+            With lo
+                Set rng = Union(.DataBodyRange, .HeaderRowRange)
+                lngRows = rng.Rows.Count
+                lngcolumns = rng.Columns.Count
+                FirstRow = rng.Row
+                FirstColumn = rng.Column
+                LastColumn = rng.Columns.Count
+            End With
+            lo.DataBodyRange.Clear
+            lo.Resize .Range(.Cells(FirstRow, FirstColumn), .Cells(FirstRow + 1, LastColumn + 1))
+        Next lo
+    End With
+    
+    Set ws = Nothing
+    Set wb = Nothing
+    
+End Sub
