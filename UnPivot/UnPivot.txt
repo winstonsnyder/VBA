@@ -1,0 +1,195 @@
+Option Explicit
+Sub UnPivotData()
+ 
+    'Purpose    :   Convert crosstab data to normalized data
+    'Author     :   Winston Snyder
+    'Date       :   5/26/2014
+ 
+    'Declare variables
+        Dim wb As Workbook
+        Dim wsData As Worksheet
+        Dim wsFlat As Worksheet
+        Dim wsFinal As Worksheet
+        Dim rng As Range
+        Dim MaxColumns As Long
+        Dim MaxRows As Long
+        Dim i As Long
+        Dim j As Long
+        Dim k As Long
+ 
+    'Excel environment - speed things up
+        With Application
+            .ScreenUpdating = False
+            .DisplayAlerts = False
+            .EnableEvents = False
+            .Calculation = xlCalculationManual
+        End With
+ 
+    'Objects
+        Set wb = ThisWorkbook
+        With wb
+            Set wsData = .Worksheets("Data")
+            Set wsFlat = .Worksheets("Flat")
+            Set wsFinal = .Worksheets("Final")
+        End With
+ 
+    'Initializations
+        wsFlat.UsedRange.ClearContents
+        wsFinal.UsedRange.ClearContents
+        MaxColumns = GetLastColumn(ws:=wsData)
+        MaxRows = GetRows(ws:=wsData)
+        k = 2
+        
+        Debug.Print MaxColumns
+        Debug.Print MaxRows
+ 
+    'Convert cross-tab report to normalized data table structure
+        With wsFlat
+            For i = 2 To MaxRows 'Begin with first row of measures
+                For j = 21 To MaxColumns 'Begin with first column of data measures
+                    .Cells(k, 1).Value = wsData.Cells(i, 1).Value  'SR #
+                    .Cells(k, 2).Value = wsData.Cells(i, 2).Value  'VIID
+                    .Cells(k, 3).Value = wsData.Cells(i, 3).Value  'Parent Name
+                    .Cells(k, 4).Value = wsData.Cells(i, 4).Value  'Cust #
+                    .Cells(k, 5).Value = wsData.Cells(i, 5).Value  'Cust Nmbr_Cost Cntr
+                    .Cells(k, 6).Value = wsData.Cells(i, 6).Value  'Svrc Cntr Code
+                    .Cells(k, 7).Value = wsData.Cells(i, 7).Value  'Bill ID
+                    .Cells(k, 8).Value = wsData.Cells(i, 8).Value  'JDE Inv
+                    .Cells(k, 9).Value = wsData.Cells(i, 9).Value  'Currency CD
+                    .Cells(k, 10).Value = wsData.Cells(i, 10).Value  'Is SR Converted
+                    .Cells(k, 11).Value = wsData.Cells(i, 11).Value  'SR Date
+                    .Cells(k, 12).Value = wsData.Cells(i, 12).Value  'WO #
+                    .Cells(k, 13).Value = wsData.Cells(i, 13).Value  'Work Date
+                    .Cells(k, 14).Value = wsData.Cells(i, 14).Value  'Bill CD
+                    .Cells(k, 15).Value = wsData.Cells(i, 15).Value  'LOS
+                    .Cells(k, 16).Value = wsData.Cells(i, 16).Value  'Bill Date
+                    .Cells(k, 17).Value = wsData.Cells(i, 17).Value  'Terms
+                    .Cells(k, 18).Value = wsData.Cells(i, 18).Value  'Due Date
+                    .Cells(k, 19).Value = wsData.Cells(i, 19).Value  'Billed Amt
+                    .Cells(k, 20).Value = wsData.Cells(i, 20).Value 'Open Amt
+                    .Cells(k, 21).Value = wsData.Cells(1, j).Value  'Aged Bucket
+                    .Cells(k, 22).Value = wsData.Cells(i, j).Value  'Amount
+                    k = k + 1
+                Next j
+            Next i
+ 
+            'Add headers
+                .Range("A1").Value = "SR #"
+                .Range("B1").Value = "VIID"
+                .Range("C1").Value = "Parent Name"
+                .Range("D1").Value = "Cust #"
+                .Range("E1").Value = "Cust Nmbr_Cost Cntr"
+                .Range("F1").Value = "Svrc Cntr Code"
+                .Range("G1").Value = "Bill ID"
+                .Range("H1").Value = "JDE Inv"
+                .Range("I1").Value = "Currency CD"
+                .Range("J1").Value = "Is SR Converted"
+                .Range("K1").Value = "SR Date"
+                .Range("L1").Value = "WO #"
+                .Range("M1").Value = "Work Date"
+                .Range("N1").Value = "Bill CD"
+                .Range("O1").Value = "LOS"
+                .Range("P1").Value = "Bill Date"
+                .Range("Q1").Value = "Terms"
+                .Range("R1").Value = "Due Date"
+                .Range("S1").Value = "Billed Amt"
+                .Range("T1").Value = "Open Amt"
+                .Range("U1").Value = "Aged Bucket"
+                .Range("V1").Value = "Amount"
+
+            'Format numbers
+                .Range("S1").EntireColumn.NumberFormat = "General"
+                .Range("G1").EntireColumn.NumberFormat = "0"
+                
+            'Create a range of columns to copy to final worksheet
+                Set rng = Union(.Range("A1").EntireColumn, _
+                                .Range("B1").EntireColumn, _
+                                .Range("D1").EntireColumn, _
+                                .Range("E1").EntireColumn, _
+                                .Range("G1").EntireColumn, _
+                                .Range("H1").EntireColumn, _
+                                .Range("L1").EntireColumn, _
+                                .Range("P1").EntireColumn, _
+                                .Range("Q1").EntireColumn, _
+                                .Range("R1").EntireColumn, _
+                                .Range("S1").EntireColumn, _
+                                .Range("T1").EntireColumn, _
+                                .Range("U1").EntireColumn, _
+                                .Range("V1").EntireColumn)
+        End With
+        
+    'Copy certain columns from the unpivot sheet to the final sheet
+        rng.Copy
+        wsFinal.Range("A1").PasteSpecial xlPasteValuesAndNumberFormats
+ 
+    'Tidy up
+        'Destroy objects
+            Set rng = Nothing
+            Set wsFinal = Nothing
+            Set wsFlat = Nothing
+            Set wsData = Nothing
+            Set wb = Nothing
+ 
+        'Restore Excel environment
+            With Application
+                .ScreenUpdating = True
+                .DisplayAlerts = True
+                .EnableEvents = True
+                .Calculation = xlCalculationAutomatic
+            End With
+End Sub
+
+
+
+Functions:
+
+Option Explicit
+
+Public Function GetRows(ws As Worksheet, _
+                        Optional ByVal ColNumber As Long = 1) As Long
+ 
+    'ws             :   Worksheet
+    'ColNumber      :   Column number to be used to determine the last row, default is Column 1 (A)
+    'Output         :   A row number of type long
+     
+    'Declare variables
+        Dim r As Long
+     
+    'Get last row
+        With ws
+            r = .Cells(Rows.Count, ColNumber).End(xlUp).Row
+        End With
+         
+    'Pass value to function
+        GetRows = r
+         
+End Function
+
+
+
+Public Function GetLastColumn(ws As Worksheet) As Long
+ 
+    'ws         :   A Worksheet Object
+    'RowNumber  :   The row to be used to determine the last column of data on the worksheet
+    'Output     :   A column number of type long
+     
+    'Declare variables
+        Dim rng As Range
+        Dim lngColumn As Long
+         
+    'Get range address of last cell on worksheet
+        Set rng = ws.Cells.SpecialCells(xlCellTypeLastCell)
+     
+    'Get column number of last cell
+        lngColumn = rng.Column
+         
+    'Pass value to function
+        GetLastColumn = lngColumn
+     
+    'Tidy up
+        Set rng = Nothing
+         
+End Function
+
+
+
