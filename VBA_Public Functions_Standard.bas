@@ -5,6 +5,7 @@
 '//Create Range Object
 '//Get User Range
 '//CleanMAX by Daniel Ferry
+'//CustomSplit
 
 =======================================================================
 Attribute VB_Name = "M_Fx"
@@ -112,4 +113,36 @@ Function CleanMAX(r As Range)
     If r.Cells.Count > 1 Then CleanMAX = "index(" & CleanMAX & ",)"
     CleanMAX = Evaluate(CleanMAX)
 End Function
+        
+Public Function CustomSplit(strParent As String, _
+                            Optional ByVal lngPosition As Long = 1, _
+                            Optional ByVal strDelimiter As String = "-") As String
+                            
+    'You may pass a different value as lngPosition, else the function will return the left part of the string
+    'You may pass a different delimieter to the function else, the function will use "-" as the delimiter
+
+    
+
+    Dim str As String
+    Dim x As Long
+    
+    x = InStrRev(StringCheck:=strParent, _
+                 Stringmatch:=strDelimiter)
+                 
+    Debug.Print "strParent: ", strParent
+    Debug.Print "Delimeter: ", strDelimiter
+    Debug.Print "lngFirst: ", lngPosition
+                 
+    Select Case lngPosition
+        Case 1
+            str = Trim(Mid(strParent, 1, x - 1))
+        Case Else
+            str = Trim(Mid(strParent, x + 1, Len(strParent) - (x + 1)))
+    End Select
+        
+    CustomSplit = str
+                   
+End Function
+
+
 
