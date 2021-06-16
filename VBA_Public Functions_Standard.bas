@@ -4,6 +4,8 @@
 '//Add Worksheet
 '//Create Range Object
 '//Get User Range
+'//CleanMAX by Daniel Ferry
+
 =======================================================================
 Attribute VB_Name = "M_Fx"
 Public Function GetLastColumn(ws As Worksheet, _
@@ -98,4 +100,16 @@ Public Function GetUserRange(ws As Worksheet) As Range
                                                 Type:=8) 'Range selection
  
  End Function
+      
+      
+Function CleanMAX(r As Range)
+
+    'Author :   Daniel Ferry
+    'Date   :   4/3/2020
+    'URL    :   https://www.linkedin.com/pulse/excel-vba-clean-data-easily-daniel-ferry/
+    
+    CleanMAX = Replace("trim(clean(substitute(|,char(160),"" "")))", "|", r.Address)
+    If r.Cells.Count > 1 Then CleanMAX = "index(" & CleanMAX & ",)"
+    CleanMAX = Evaluate(CleanMAX)
+End Function
 
