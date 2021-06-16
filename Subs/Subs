@@ -1,1 +1,64 @@
+'//Public Subs
+'//Add Blank Rows
+///Fill Down
+'//=================================
+
+Sub addlines()
+Dim wb As Workbook
+Dim ws As Worksheet
+Dim i As Long
+Dim r As Long
+Dim x As Long
+x = 3
+
+Set wb = ThisWorkbook
+Set ws = wb.Worksheets(1)
+
+r = GetRows(ws:=ws)
+
+With ws
+    For i = 1 To r
+        .Cells(x, 1).EntireRow.Insert
+        x = x + 2
+    Next i
+End With
+
+Set ws = Nothing
+Set wb = Nothing
+End Sub
+
+
+Sub FillDown()
+Dim wb As Workbook
+Dim ws As Worksheet
+Dim rngB As Range
+Dim rngE As Range
+Dim i As Long
+Dim r As Long
+Dim x As Long
+x = 3
+
+Set wb = ThisWorkbook
+Set ws = wb.Worksheets(1)
+
+r = GetRows(ws:=ws)
+x = 2
+
+
+With ws
+    For i = 1 To r + 1
+        Set rngB = .Range(.Cells(x, 1), .Cells(x, 8))
+        Set rngE = .Range(.Cells(x + 1, 1), .Cells(x + 1, 8))
+        rngE.Value = rngB.Value
+        Set rngB = Nothing
+        Set rngE = Nothing
+        x = x + 2
+    Next i
+End With
+
+Set ws = Nothing
+Set wb = Nothing
+End Sub
+
+
 
