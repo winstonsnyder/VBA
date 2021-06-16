@@ -1,6 +1,7 @@
 '//Public Subs
 '//Add Blank Rows
 '//Fill Down
+'//TestFind
 '//=================================
 
 Sub addlines()
@@ -59,6 +60,34 @@ End With
 Set ws = Nothing
 Set wb = Nothing
 End Sub
+
+
+
+
+Option Explicit
+
+Sub TestFind()
+
+    Dim wb As Workbook
+    Dim ws As Worksheet
+    Dim GetColumnNumber As Long
+    
+    Set wb = ThisWorkbook
+    Set ws = wb.Worksheets(1)
+    
+    On Error Resume Next
+    
+    GetColumnNumber = FindColumnNumber(ws:=ws, _
+                                       strSearchTerm:="Cat")
+                                       
+    If GetColumnNumber = 0 Then
+        Debug.Print "The search term does not exist"
+    Else
+        Debug.Print "The search term was found in column : " & GetColumnNumber
+    End If
+
+End Sub
+
 
 
 
