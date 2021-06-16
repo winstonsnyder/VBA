@@ -3,6 +3,7 @@
 '//Get Last Row
 '//Add Worksheet
 '//Create Range Object
+'//Get User Range
 =======================================================================
 Attribute VB_Name = "M_Fx"
 Public Function GetLastColumn(ws As Worksheet, _
@@ -84,4 +85,17 @@ Public Function CreateRangeObject(ws As Worksheet, _
         Set rng = Nothing
                          
 End Function
+    
+Public Function GetUserRange(ws As Worksheet) As Range
+
+    'Prompt user to select a range of cells on a worksheet
+      
+    'Users - select a cell on a worksheet
+        Set GetUserRange = Application.InputBox( _
+                                                Prompt:="Please select a range on the worksheet", _
+                                                Title:="Select a range", _
+                                                Default:=ActiveCell.Address, _
+                                                Type:=8) 'Range selection
+ 
+ End Function
 
