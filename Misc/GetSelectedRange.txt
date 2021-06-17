@@ -1,0 +1,19 @@
+Public Function GetSelectedRange() As Range
+
+    'Declare variables
+        Dim rng                         As Range
+    
+    'Users - select a cell on a worksheet
+        Set rng = Application.InputBox _
+                        (Prompt:="Please Select Range", _
+                         Title:="Range Select", _
+                         Type:=8)
+    
+    'Pass the name of the worksheet to the function
+        Set GetSelectedRange = rng
+    
+    'Tidy up
+        Set rng = Nothing
+
+End Function
+

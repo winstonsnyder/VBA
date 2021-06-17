@@ -1,0 +1,27 @@
+Public Function AddWorksheet(wb As Workbook, _
+                             strSheetName As String) As Worksheet
+
+    'Declare variables
+        Dim ws As Worksheet
+        Dim strMySheetName As String
+
+    'Add worksheet if it does not exist
+        On Error Resume Next
+        Set ws = Sheets(strSheetName)
+'        On Error GoTo 0
+        If Not ws Is Nothing Then
+            'The worksheet already exists
+                ws.UsedRange.ClearContents
+        Else
+            'The worksheet does not exist
+                Set ws = wb.Sheets.Add(After:=wb.Sheets(wb.Sheets.Count))
+                ws.Name = strSheetName
+        End If
+        
+    'Pass object to function
+        Set AddWorksheet = ws
+        
+    'Tidy up
+        Set ws = Nothing
+
+End Function

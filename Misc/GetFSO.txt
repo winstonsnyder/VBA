@@ -1,0 +1,14 @@
+Public Function GetFSO()
+
+    'Declare variables
+        Dim fso             As Object
+    
+    'Create a FileSystemObject
+        Set fso = CreateObject("Scripting.FileSystemObject")
+    
+    'Pass the object to the function
+        Set GetFSO = fso
+        
+    'Tidy up
+        Set fso = Nothing
+End Function

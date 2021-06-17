@@ -1,0 +1,33 @@
+Public Function CreateRangeObject(ws As Worksheet, _
+                                  Optional ByVal RowBegin As Long = 1, _
+                                  Optional ByVal ColumnBegin As Long = 1, _
+                                  Optional ByVal ColumnReference As Long = 1, _
+                                  Optional ByVal RowReference As Long = 1) As Range
+                              
+    'Declare variables
+        Dim rng As Range
+        Dim RowEnd As Long
+        Dim ColumnEnd As Long
+    
+    'Get last row
+        RowEnd = GetLast(ws:=ws, _
+                         RC:="r", _
+                         lngRowColumn:=ColumnReference)
+                         
+    'Get last column
+        ColumnEnd = GetLast(ws:=ws, _
+                            RC:="c", _
+                            lngRowColumn:=RowReference)
+                         
+    'Create a range object
+        With ws
+            Set rng = .Range(.Cells(RowBegin, ColumnBegin), .Cells(RowEnd, ColumnEnd))
+        End With
+        
+    'Pass object to function
+        Set CreateRangeObject = rng
+        
+    'Tidy up
+        Set rng = Nothing
+                         
+End Function

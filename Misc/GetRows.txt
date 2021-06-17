@@ -1,0 +1,16 @@
+Public Function GetRows(ws As Worksheet, _
+                        Optional lngColumn As Long = 1) As Long
+                        
+    'Inputs :   A worksheet and a column number
+    'Output :   Last used row in specified column
+    
+    'Declare variables
+        Dim r       As Long
+
+    'Get last used row
+        r = ws.Cells(Rows.Count, lngColumn).End(xlUp).Row
+        
+    'Pass value to function
+        GetRows = r
+
+End Function

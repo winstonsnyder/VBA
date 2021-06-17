@@ -1,0 +1,27 @@
+Sub TrimALL()
+   'David McRitchie 2000-07-03 mod 2000-08-16 2005-09-29 join.htm
+   '-- http://www.mvps.org/dmcritchie/excel/join.htm#trimall
+   ' - Optionally reenable improperly terminated Change Event macros
+      Application.DisplayAlerts = True
+      Application.EnableEvents = True   'should be part of Change Event macro
+   If Application.Calculation = xlCalculationManual Then
+      MsgBox "Calculation was OFF will be turned ON upon completion"
+   End If
+   Application.ScreenUpdating = False
+   Application.Calculation = xlCalculationManual
+   Dim cell As Range
+   'Also Treat CHR 0160, as a space (CHR 032)
+   Selection.Replace What:=Chr(160), Replacement:=Chr(32), _
+     LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False
+   'Trim in Excel removes extra internal spaces, VBA does not
+   On Error Resume Next   'in case no text cells in selection
+   For Each cell In Intersect(Selection, _
+      Selection.SpecialCells(xlConstants, xlTextValues))
+     cell.Value = Application.Trim(cell.Value)
+   Next cell
+   On Error GoTo 0
+   Application.Calculation = xlCalculationAutomatic
+   Application.ScreenUpdating = True
+End Sub
+
+

@@ -1,0 +1,36 @@
+Public Function GetFDObjectName(strDialogType As String) As String      
+	
+	'Returns either the name of a folder or the name of a file based on the type passed into the function, "strDialogType"        
+
+	'Declare variables        
+		Dim fd As FileDialog        
+		Dim strObjectName As String        
+		Dim strTitle As String              
+
+	'Choose if user requested a folder dialog or other        
+		Select Case strDialogType            
+			Case "Folder"                                                               
+				'Folder Dialog                
+				strTitle = "Please select a folder"                
+				Set fd = Application.FileDialog(gclmsoFileDialogFolderPicker)            
+			Case Else                
+				strTitle = "Please select a file"                                       
+				'File Dialog                
+				Set fd = Application.FileDialog(gclmsoFileDialogFilePicker)        
+		End Select
+		
+	'Invoke filedialog        
+		With fd            
+			.Title = strTitle            
+			.AllowMultiSelect = False            
+			.Show            
+			strObjectName = .SelectedItems(1)        
+		End With              
+
+	'Pass value to function        
+		GetFDObjectName = strObjectName          
+
+	'Tidy up        
+		Set fd = Nothing
+		
+End Function

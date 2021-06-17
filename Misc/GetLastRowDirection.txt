@@ -1,0 +1,23 @@
+Public Function GetLastRow(ws As Worksheet, _
+                           lngRowColumn As Long, _
+                           Direction As String) As Long
+                        
+    'Requirements :   ws - A worksheet object
+    '                 lngRowColumn - Either the row or column number to be used
+    '                 Direction - Either xlDown or xlUp
+    
+    'Declare variables
+        Dim x       As Long
+
+    'Get last used row
+        Select Case Direction
+            Case "Down"
+                x = ws.Cells(1, lngRowColumn).End(xlDown).Row
+            Case Else
+                x = ws.Cells(Rows.Count, lngRowColumn).End(xlUp).Row
+        End Select
+        
+    'Pass value to function
+        GetLastRow = x
+
+End Function

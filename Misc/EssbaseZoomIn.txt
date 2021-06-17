@@ -1,0 +1,25 @@
+Public Function GetZoomData(ByVal sheetName As Variant, _
+                            ByVal range As Variant, _
+                            ByVal selection As Variant, _
+                            ByVal level As Variant, _
+                            ByVal across As Variant) As Long
+                        
+    'Documentation
+        'VBA Level Constants -> http://docs.oracle.com/cd/E17236_01/epm.1112/esb_ss_user/frameset.htm?idh_essv_levelconstants.html
+        'Level 2 is all levels
+        
+    'Declare variables
+        Dim x As Long
+        
+    'ZoomIn
+        x = EssVZoomIn(sheetName, _
+                       range, _
+                       selection, _
+                       level, _
+                       across)
+    
+    'Pass value to function
+        GetZoomData = x
+
+        
+End Sub

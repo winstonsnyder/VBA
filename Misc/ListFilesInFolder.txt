@@ -1,0 +1,93 @@
+Option Explicit
+
+Sub ListFilesInFolder()
+
+    Dim wb As Workbook
+    Dim ws As Worksheet
+    Dim fso As Object
+    Dim fsoFolder As Object
+    Dim fsoFile As Object
+    Dim strSelectedFolder As String
+    Dim i As Long
+    
+    'Excel envrionment - speed things up
+        With Application
+            .ScreenUpdating = False
+            .DisplayAlerts = False
+            .EnableEvents = False
+            .Calculation = xlCalculationManual
+        End With
+        
+    'Initialize variables
+        Set wb = ThisWorkbook
+        Set ws = wb.Worksheets("lstFiles")
+        i = 1
+        
+    'Clear previous use
+        ws.UsedRange.ClearContents
+        
+    'Create a FileSystemObject
+        Set fso = GetFSO
+    
+    'Prompt the user to select a folder
+    'Return the path of the selected folder
+        strSelectedFolder = GetSelectedFolder
+        
+    'Get the fsoFolder of the selected folder
+        Set fsoFolder = fso.getfolder(strSelectedFolder)
+        
+    'Get the name of each file in the selected folder
+        For Each fsoFile In fsoFolder.Files
+            ws.Cells(i, 1).Value = fsoFile.Name
+            i = i + 1
+        Next fsoFile
+        
+    'Tidy up
+        'Destroy objects
+            Set fsoFolder = Nothing
+            Set fso = Nothing
+            Set ws = Nothing
+            Set wb = Nothing
+        
+        'Reset Excel environment
+            With Application
+                .ScreenUpdating = True
+                .DisplayAlerts = True
+                .EnableEvents = True
+                .Calculation = xlCalculationAutomatic
+            End With
+End Sub
+
+Private Function GetFSO()
+
+    Dim fso As Object
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    Set GetFSO = fso
+    
+    Set fso = Nothing
+    
+End Function
+
+Private Function GetSelectedFolder() As String
+
+    'Declare variables
+        Dim diaFolder As FileDialog
+        Dim strFolder As String
+        
+    'Instantiate objects
+        Set diaFolder = Application.FileDialog(msoFileDialogFolderPicker)
+        
+    'Folder picker
+        With diaFolder
+            .AllowMultiSelect = False
+            .Show
+            strFolder = .SelectedItems(1)
+        End With
+    
+    'Pass value to function
+        GetSelectedFolder = strFolder
+        
+    'Tidy up
+        Set diaFolder = Nothing
+
+End Function

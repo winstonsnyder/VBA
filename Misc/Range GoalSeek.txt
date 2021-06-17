@@ -1,0 +1,25 @@
+Option Explicit
+
+Sub SetGoal()
+
+    Dim wb As Workbook
+    Dim ws As Worksheet
+    Const lngSEEK As Long = 26
+    Const lngGOAL As Long = 198
+    Const lngCHANGE As Long = 191
+    Dim i As Long
+    
+    Set wb = ThisWorkbook
+    Set ws = wb.Worksheets("Knolls3_MM")
+    
+    With ws
+        For i = 3 To 14
+            .Cells(lngSEEK, i).GoalSeek _
+                Goal:=.Cells(lngGOAL, i).Value, _
+                ChangingCell:=.Cells(lngCHANGE, i)
+        Next i
+    End With
+    
+    Set ws = Nothing
+    Set wb = Nothing
+End Sub

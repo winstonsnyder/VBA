@@ -1,0 +1,16 @@
+Option Explicit
+
+Public Function GetUserInput(strPrompt As String, _
+                             strTitle As String) As String
+
+    'Declare variables
+        Dim strUserInput As String
+
+    'Call the InputBox Method, pass user input to a variable
+        strUserInput = InputBox(Prompt:=strPrompt, _
+                                Title:=strTitle)
+
+    'Pass the user input to the function
+        GetUserInput = strUserInput
+
+End Function
