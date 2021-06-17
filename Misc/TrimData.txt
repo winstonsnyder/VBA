@@ -1,0 +1,28 @@
+Private Sub TrimData(ws As Worksheet)
+
+    'Declare variables
+        Dim x As Long
+        Dim rng As Range
+        Dim C As Range
+  
+    'Create range object
+        With ws
+            x = GetLast(ws:=ws, _
+                        RC:="r", _
+                        lngRowColumn:=3)
+                        
+            Set rng = .Range(.Cells(1, 1), .Cells(x, 4))
+        End With
+        
+    'Trim each cell in range
+        For Each C In rng
+            If Not IsNumeric(C.Value) And Not IsEmpty(C) Then
+                On Error Resume Next
+                C.Value = Trim(C.Value)
+            End If
+        Next C
+            
+    'Tidy up
+        Set rng = Nothing
+
+End Sub

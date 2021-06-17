@@ -1,0 +1,63 @@
+Option Explicit
+
+Sub ProcessControl()
+
+    Dim wb As Workbook
+    Dim ws As Worksheet
+    Dim lngColumn As Long
+    
+    Set wb = ActiveWorkbook
+    Set ws = wb.ActiveSheet
+    lngColumn = ActiveCell.Column
+    
+    Call TrimSpaces(ws:=ws, _
+                    ColumnToTrim:=lngColumn)
+                    
+    'Tidy up
+        Set ws = Nothing
+        Set wb = Nothing
+    
+End Sub
+
+
+Private Sub TrimSpaces(ws As Worksheet, _
+                       ColumnToTrim As Long)
+
+    Dim MaxRows As Long
+    Dim rng As Range
+    Dim C As Range
+    
+    'Get max rows
+        MaxRows = GetRows(ws:=ws, _
+                          DataColumn:=1)
+                          
+    'Define range
+        With ws
+            Set rng = .Range(.Cells(2, ColumnToTrim), .Cells(MaxRows, ColumnToTrim))
+        End With
+        
+    'Remove spaces
+        For Each C In rng
+            C.Value = Trim(C.Value)
+        Next C
+        
+    'Tidy up
+        Set rng = Nothing
+
+End Sub
+
+Public Function GetRows(ws As Worksheet, _
+                        Optional ByVal DataColumn As Long = 1) As Long
+                        
+    'Declare variables
+        Dim r As Long
+        
+    'Get number of rows
+        r = ws.Cells(Rows.Count, DataColumn).End(xlUp).Row
+        
+    'pass value to function
+        GetRows = r
+    
+        
+End Function
+

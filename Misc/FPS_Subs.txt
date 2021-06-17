@@ -1,0 +1,620 @@
+Option Explicit
+
+Sub ProcessAllData()
+
+    'Declare variables
+        Dim wb As Workbook
+        Dim wsData As Worksheet
+        Dim wsUnpivot As Worksheet
+        Dim wsFiltered As Worksheet
+        
+    'Excel environment
+        With Application
+            .DisplayAlerts = False
+            .ScreenUpdating = False
+            .EnableEvents = False
+            .Calculation = xlCalculationManual
+        End With
+        
+    'Initialize objects and variables
+        Set wb = ThisWorkbook
+        
+    'Add worksheet for data
+        Set wsData = AddWorksheet(wb:=wb, _
+                                  strSheetName:="Data")
+        
+    'Get actual data
+        Call GetData(wb:=wb, _
+                     wsWorking:=wsData, _
+                     lngRowBegin:=9, _
+                     lngRowEnd:=119, _
+                     lngColumnBegin:=1, _
+                     lngColumnEnd:=15, _
+                     strProcess:="Actual")
+                          
+    'Get budget data
+        Call GetData(wb:=wb, _
+                     wsWorking:=wsData, _
+                     lngRowBegin:=9, _
+                     lngRowEnd:=119, _
+                     lngColumnBegin:=25, _
+                     lngColumnEnd:=39, _
+                     strProcess:="Budget")
+                         
+    'Trim data
+        Call TrimData(ws:=wsData)
+        
+    'Remove formatting
+        Call RemoveFormats(ws:=wsData)
+                
+    'Add Header
+        Call AddHeader(ws:=wsData)
+        
+    'Remove rows with no labels
+        Call RemoveRowsNoLabels(ws:=wsData)
+        
+    'Zoom Level
+        Call SetZoomLevel(ws:=wsData)
+        
+    'Adjust column widths
+        Call AdjustColumnWidths(ws:=wsData)
+        
+    'Fill category levels
+        Call FillLabels(ws:=wsData, _
+                        lngColumn:=3)
+                        
+    'Update total labels
+        Call UpdateTotalLabels(ws:=wsData, _
+                               lngColumn:=4)
+    
+    'Update other labels
+        Call UpdateOtherLabels(ws:=wsData, _
+                               lngColumn:=3)
+        
+    'Apply formatting
+        Call ApplyFormatting(ws:=wsData)
+        
+    'Add worksheet for unpivot
+        Set wsUnpivot = AddWorksheet(wb:=wb, _
+                                     strSheetName:="Unpivot")
+                                     
+    'UnPivot data
+        Call UnPivotData(wsSource:=wsData, _
+                         wsNormalized:=wsUnpivot)
+                         
+    'Delete blank rows
+        Call DeleteBlankRows(ws:=wsUnpivot, _
+                             lngColumn:=5)
+                         
+    'Add worksheet for filtered data
+        Set wsFiltered = AddWorksheet(wb:=wb, _
+                                      strSheetName:="Filtered")
+                                      
+    'Filter results on Unpivot sheet
+        Call FilterResults(wsSource:=wsUnpivot, _
+                           lngField:=5)
+                           
+    'Copy visible range to final results
+        Call CopyVisibleToFinal(wsSource:=wsUnpivot, _
+                                wsFinal:=wsFiltered)
+       
+    'Zoom Level
+        Call SetZoomLevel(ws:=wsUnpivot)
+            
+    'Apply formatting
+        Call ApplyFormatting(ws:=wsUnpivot)
+        
+    'Adjust column widths
+        Call AdjustColumnWidths(ws:=wsUnpivot)
+
+    'Tidy up
+        'Delete added sheets
+'            wsData.Delete
+        
+        'Destroy objects
+            Set wsFiltered = Nothing
+            Set wsUnpivot = Nothing
+            Set wsData = Nothing
+            Set wb = Nothing
+            
+        'Excel environment
+            With Application
+                .DisplayAlerts = True
+                .ScreenUpdating = True
+                .EnableEvents = True
+                .Calculation = xlCalculationAutomatic
+            End With
+
+        
+End Sub
+
+Private Sub GetData(wb As Workbook, _
+                    wsWorking As Worksheet, _
+                    lngRowBegin As Long, _
+                    lngRowEnd As Long, _
+                    lngColumnBegin As Long, _
+                    lngColumnEnd As Long, _
+                    strProcess As String)
+
+    'Declare variables
+        Dim ws As Worksheet
+        Dim rngCopy As Range
+        Dim rngDestination As Range
+        Dim rngSheetName As Range
+        Dim rng As Range
+        Dim NewLastRow As Long
+        Dim lastDataRow As Long
+        Dim lngDestinationColumn As Long
+        Dim lngBeginRow As Long
+        Dim lngEndRow As Long
+        Dim lngColumn As Long
+        Dim x As Long
+        Dim strScenario As String
+        Dim blnAdd As Boolean
+
+    'Initialize objects and variables
+        If strProcess = "Actual" Then blnAdd = True
+        
+    'Copy actual data from Red Tabs
+        For Each ws In wb.Worksheets
+            If ws.Tab.ColorIndex = 3 Then
+                'Range to Copy
+                    With ws
+                        Set rngCopy = .Range(.Cells(lngRowBegin, lngColumnBegin), .Cells(lngRowEnd, lngColumnEnd))
+                    End With
+                    
+                'Destination range
+                    With wsWorking
+                        lastDataRow = GetLast(ws:=wsWorking, _
+                                              RC:="r", _
+                                              lngRowColumn:=2) + 1
+                                  
+                        If strProcess = "Actual" Then
+                            If blnAdd = True Then
+                                lngDestinationColumn = 2
+                            Else
+                                lngDestinationColumn = 3
+                            End If
+                        Else
+                            lngDestinationColumn = 3
+                        End If
+                        
+                        Set rngDestination = .Range(.Cells(lastDataRow, lngDestinationColumn), .Cells(lastDataRow, lngDestinationColumn))
+                        
+                        'Copy / paste data
+                            rngCopy.Copy
+                            rngDestination.PasteSpecial (xlPasteValuesAndNumberFormats)
+                            
+                        'Add sheet name
+                            If blnAdd = True Then
+                                
+                                lngBeginRow = 2
+                                lngEndRow = GetLast(ws:=wsWorking, _
+                                                             RC:="r", _
+                                                             lngRowColumn:=2)
+                                lngColumn = 1
+                            Else
+                                lngBeginRow = GetLast(ws:=wsWorking, _
+                                                      RC:="r", _
+                                                      lngRowColumn:=1) + 1
+                                                      
+                                lngEndRow = GetLast(ws:=wsWorking, _
+                                                    RC:="r", _
+                                                    lngRowColumn:=3)
+                                lngColumn = 1
+                            End If
+                                                 
+                            Set rngSheetName = .Range(.Cells(lngBeginRow, lngColumn), .Cells(lngEndRow, lngColumn))
+                            rngSheetName.Value = ws.Name
+                            
+                        'Add scenario
+                            If strProcess = "Actual" Then
+                                If blnAdd = True Then
+                                    .Range("B1").EntireColumn.Insert
+                                    lngBeginRow = 2
+                                    lngEndRow = GetLast(ws:=wsWorking, _
+                                                        RC:="r", _
+                                                        lngRowColumn:=3)
+                                    lngColumn = 2
+                                Else
+                                    lngBeginRow = GetLast(ws:=wsWorking, _
+                                                          RC:="r", _
+                                                          lngRowColumn:=2) + 1
+                                                          
+                                    lngEndRow = GetLast(ws:=wsWorking, _
+                                                        RC:="r", _
+                                                        lngRowColumn:=3)
+                                    lngColumn = 2
+                                End If
+                            Else
+                                lngBeginRow = GetLast(ws:=wsWorking, _
+                                                          RC:="r", _
+                                                          lngRowColumn:=2) + 1
+                                                          
+                                lngEndRow = GetLast(ws:=wsWorking, _
+                                                    RC:="r", _
+                                                    lngRowColumn:=3)
+                                lngColumn = 2
+                            End If
+                                        
+                            Set rng = .Range(.Cells(lngBeginRow, lngColumn), .Cells(lngEndRow, lngColumn))
+                            
+                            Select Case lngColumnEnd
+                                Case 15
+                                    strScenario = "CFY2014Actual"
+                                Case Else
+                                    strScenario = "CFY2014Budget"
+                            End Select
+                            
+                            rng.Value = strScenario
+                    End With
+            End If
+            blnAdd = False
+        Next ws
+        
+    'Tidy up
+        'Destroy objects
+            Set rng = Nothing
+            Set rngCopy = Nothing
+            Set rngDestination = Nothing
+            Set rngSheetName = Nothing
+            
+End Sub
+
+Private Sub TrimData(ws As Worksheet)
+
+    'Declare variables
+        Dim x As Long
+        Dim rng As Range
+        Dim C As Range
+  
+    'Create range object
+        With ws
+            x = GetLast(ws:=ws, _
+                        RC:="r", _
+                        lngRowColumn:=3)
+                        
+            Set rng = .Range(.Cells(1, 1), .Cells(x, 4))
+        End With
+        
+    'Trim each cell in range
+        For Each C In rng
+            If Not IsNumeric(C.Value) And Not IsEmpty(C) Then
+                On Error Resume Next
+                C.Value = Trim(C.Value)
+            End If
+        Next C
+            
+    'Tidy up
+        Set rng = Nothing
+
+End Sub
+
+Private Sub RemoveFormats(ws As Worksheet)
+
+    'Declare variables
+        Dim x As Long
+        Dim rng As Range
+  
+    'Create range object
+        With ws
+            x = GetLast(ws:=ws, _
+                        RC:="r", _
+                        lngRowColumn:=3)
+                        
+            Set rng = .Range(.Cells(1, 1), .Cells(x, 4))
+        End With
+        
+    'Remove formats
+        rng.ClearFormats
+            
+    'Tidy up
+        Set rng = Nothing
+
+End Sub
+
+Private Sub ApplyFormatting(ws As Worksheet)
+        
+    'Apply formatting
+        With ws.UsedRange
+            .Font.Name = "Calibri"
+            .Font.Size = 11
+        End With
+
+End Sub
+
+Private Sub AddHeader(ws As Worksheet)
+
+    'Declare variables
+        Dim x As Long
+        Dim rng As Range
+  
+        With ws
+            'If there is anything in the first row insert a new row
+                If Not IsEmpty(.Range("A1")) Then
+                    .Range("A1").EntireRow.Insert
+                End If
+                
+            'Add headers
+                .Range("A1").Value = "Location"
+                .Range("B1").Value = "Scenario"
+                .Range("C1").Value = "Category"
+                .Range("D1").Value = "Subcategory"
+                .Range("E1").Value = "1/1/2014"
+                .Range("F1").Value = "2/1/2014"
+                .Range("G1").Value = "3/1/2014"
+                .Range("H1").Value = "4/1/2014"
+                .Range("I1").Value = "5/1/2014"
+                .Range("J1").Value = "6/1/2014"
+                .Range("K1").Value = "7/1/2014"
+                .Range("L1").Value = "8/1/2014"
+                .Range("M1").Value = "9/1/2014"
+                .Range("N1").Value = "10/1/2014"
+                .Range("O1").Value = "11/1/2014"
+                .Range("P1").Value = "12/1/2014"
+                .Range("Q1").Value = "TotalYear"
+        End With
+        
+End Sub
+
+Private Sub RemoveRowsNoLabels(ws As Worksheet)
+    
+    'Declare variables
+        Dim x As Long
+        Dim i As Long
+  
+    'Last row
+        With ws
+            x = GetLast(ws:=ws, _
+                        RC:="r", _
+                        lngRowColumn:=3)
+        End With
+        
+    'Delete row if col 3 or col 4 are blank
+    'Bottom up
+        With ws
+            For i = x To 1 Step -1
+                If IsEmpty(.Cells(i, 3)) And IsEmpty(.Cells(i, 4)) Then
+                    .Cells(i, 3).EntireRow.Delete shift:=xlUp
+                End If
+            Next i
+        End With
+    
+End Sub
+
+
+Private Sub SetZoomLevel(ws As Worksheet)
+
+    ws.Select
+    ActiveWindow.Zoom = 75
+    
+End Sub
+
+
+Private Sub AdjustColumnWidths(ws As Worksheet)
+
+    With ws
+        If ws.Name = "Data" Then
+            .Columns("A:D").AutoFit
+            .Columns("E:Q").ColumnWidth = 15
+        ElseIf ws.Name = "Unpivot" Then
+            .Columns("A:E").AutoFit
+        End If
+    End With
+
+
+End Sub
+
+Private Sub FillLabels(ws As Worksheet, _
+                       lngColumn As Long)
+                       
+    'Declare variables
+        Dim x As Long
+        Dim i As Long
+        Dim strLabel As String
+        
+    'Initialize variables
+        strLabel = "None"
+  
+    'Last row
+        With ws
+            x = GetLast(ws:=ws, _
+                        RC:="r", _
+                        lngRowColumn:=1)
+        End With
+        
+    'Fill down
+        With ws
+            For i = 2 To x
+                If IsEmpty(.Cells(i, lngColumn)) Then
+                    .Cells(i, lngColumn).Value = strLabel
+                Else
+                    strLabel = .Cells(i, lngColumn).Value
+                End If
+            Next i
+        End With
+                       
+End Sub
+
+Private Sub UpdateTotalLabels(ws As Worksheet, _
+                             lngColumn As Long)
+                         
+    'Declare variables
+        Dim x As Long
+        Dim i As Long
+        
+    'Initialize variables
+  
+    'Last row
+        With ws
+            x = GetLast(ws:=ws, _
+                        RC:="r", _
+                        lngRowColumn:=1)
+        End With
+        
+    'Update Total Labels
+        With ws
+            For i = 2 To x
+                If .Cells(i, lngColumn).Value = "TOTAL" Then
+                    .Cells(i, lngColumn - 1).Value = UCase("Total " & .Cells(i, lngColumn - 1).Value)
+                End If
+            Next i
+        End With
+
+End Sub
+
+Private Sub UpdateOtherLabels(ws As Worksheet, _
+                              lngColumn As Long)
+                              
+    'Declare variables
+        Dim x As Long
+        Dim i As Long
+        
+    'Initialize variables
+  
+    'Last row
+        With ws
+            x = GetLast(ws:=ws, _
+                        RC:="r", _
+                        lngRowColumn:=1)
+        End With
+        
+    'Update other Labels
+        With ws
+            For i = 2 To x
+                If .Cells(i, lngColumn).Value = "CONTROL COSTS" Then
+                    .Cells(i, lngColumn).Value = "TOTAL CONTROLLABLES"
+                ElseIf .Cells(i, lngColumn).Value = "NONCONTROL COSTS" Then
+                    .Cells(i, lngColumn).Value = "TOTAL NONCONTROLLABLES"
+                End If
+            Next i
+        End With
+
+                              
+End Sub
+
+
+Private Sub UnPivotData(wsSource As Worksheet, _
+                        wsNormalized As Worksheet)
+    
+    'Declare variables
+        Dim MaxColumns As Long
+        Dim MaxRows As Long
+        Const rowDates As Long = 1
+        Dim i As Long
+        Dim j As Long
+        Dim k As Long
+
+    'Initialize
+        MaxColumns = GetLast(ws:=wsSource, _
+                             RC:="c", _
+                             lngRowColumn:=1)
+                             
+        MaxRows = GetLast(ws:=wsSource, _
+                          RC:="r", _
+                          lngRowColumn:=1)
+    
+        k = 2
+
+    'Convert cross-tab report to normalized data table structure
+        With wsNormalized
+            For i = 2 To MaxRows 'Begin with first row of (Measures)
+                For j = 5 To MaxColumns 'Begin with first column of data (Measures)
+                .Cells(k, 1).Value = wsSource.Cells(i, 1).Value   'Organization
+                .Cells(k, 2).Value = wsSource.Cells(i, 2).Value   'Scenario
+                .Cells(k, 3).Value = wsSource.Cells(i, 3).Value   'Account
+                .Cells(k, 4).Value = wsSource.Cells(rowDates, j).Value  'Time
+                .Cells(k, 5).Value = wsSource.Cells(i, j).Value  'Measure
+                k = k + 1
+                Next j
+            Next i
+
+            'Add headers
+                .Range("A1").Value = "Organization"
+                .Range("B1").Value = "Scenario"
+                .Range("C1").Value = "Account"
+                .Range("D1").Value = "Period"
+                .Range("E1").Value = "Measure"
+        End With
+End Sub
+
+Private Sub FilterResults(wsSource As Worksheet, _
+                          lngField As Long)
+                          
+    'Declare variables
+        Dim rng As Range
+        Dim MaxColumns As Long
+        Dim MaxRows As Long
+
+    'Initialize
+        MaxColumns = GetLast(ws:=wsSource, _
+                             RC:="c", _
+                             lngRowColumn:=1)
+                             
+        MaxRows = GetLast(ws:=wsSource, _
+                          RC:="r", _
+                          lngRowColumn:=1)
+                          
+        With wsSource
+            Set rng = .Range(.Cells(1, 1), .Cells(MaxRows, MaxColumns))
+        End With
+        
+    'Filter out unwanted values
+        With rng
+            .AutoFilter _
+                Field:=lngField, _
+                Criteria1:=Array("<>", "<>#DIV/0!")
+'                Criteria1:=Array("<>", "#DIV/0!", "$0.00", 0, 0#)
+        End With
+
+End Sub
+
+Private Sub CopyVisibleToFinal(wsSource As Worksheet, _
+                               wsFinal As Worksheet)
+                               
+    'Declare variables
+        Dim rng As Range
+
+    'Initialize variables and objects
+        Set rng = wsSource.Range("A1").CurrentRegion
+        
+    'Copy visible data
+        rng.SpecialCells(xlCellTypeVisible).Copy
+        
+    'Paste to final sheet
+        wsFinal.Range("A1").PasteSpecial xlPasteValuesAndNumberFormats
+        
+    'Tidy up
+        Set rng = Nothing
+                    
+End Sub
+                               
+Private Sub DeleteBlankRows(ws As Worksheet, _
+                            lngColumn As Long)
+    
+    'Declare variables
+        Dim x As Long
+        Dim i As Long
+  
+    'Last row
+        With ws
+            x = GetLast(ws:=ws, _
+                        RC:="r", _
+                        lngRowColumn:=1)
+        End With
+        
+    'Delete row if col 3 or col 4 are blank
+    'Bottom up
+        With ws
+            For i = x To 1 Step -1
+                On Error Resume Next
+                If IsEmpty(.Cells(i, 5)) Or .Cells(i, 5) = 0 Then
+                    .Cells(i, 5).EntireRow.Delete shift:=xlUp
+                End If
+            Next i
+        End With
+    
+End Sub
+
+
+

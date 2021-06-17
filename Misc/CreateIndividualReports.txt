@@ -1,0 +1,85 @@
+Option Explicit
+
+Sub CreateReports()
+
+    'Create variance report files
+    'Winston Snyder
+    '8/7/2014
+    
+    'Declare variables
+        Dim wb As Workbook
+        Dim wbNew As Workbook
+        Dim wsNew As Worksheet
+        Dim wsUnits As Worksheet
+        Dim wsAnalysis As Worksheet
+        Dim rngNew As Range
+        Dim MaxRows As Long
+        Dim i As Long
+        Dim strMonthYear As String
+        Const strPath As String = "C:\VarianceReports\"
+        Const strExtension As String = ".xlsx"
+        
+    'Initialize
+        Set wb = ThisWorkbook
+        With wb
+            Set wsUnits = .Worksheets("infUnits")
+            Set wsAnalysis = .Worksheets("Analysis")
+        End With
+        
+        MaxRows = GetLast(ws:=wsUnits, _
+                          RC:="r", _
+                          lngRowColumn:=1)
+                          
+        'User - What is report month and year?
+            strMonthYear = GetUserInput(strPrompt:="What is the report month and year", _
+                                        strTitle:="Variance Report")
+                          
+    'Create variance reports
+        For i = MaxRows To 1 Step -1
+            
+            'Update unit name
+                wsAnalysis.Cells(2, 2).Value = wsUnits.Cells(i, 1).Value
+                
+            'Add a new workbook to hold final report
+                Set wbNew = Workbooks.Add
+                Set wsNew = wbNew.Worksheets(1)
+                Set rngNew = wsNew.Range("B1")
+                
+            'Copy the report from the analysis sheet
+                With wsAnalysis
+                    .Range(.Cells(1, 2), .Cells(19, 9)).Copy
+                    rngNew.PasteSpecial (xlPasteValuesAndNumberFormats)
+                    rngNew.PasteSpecial (xlPasteFormats)
+                    rngNew.PasteSpecial (xlPasteColumnWidths)
+                End With
+                
+            'Format the report
+                wsNew.Activate
+                With ActiveWindow
+                    .Zoom = 100
+                    .DisplayGridlines = False
+                End With
+                
+                With wsNew
+                    .Range("A1:A2").RowHeight = 23.25
+                    .Range("A3:A5").RowHeight = 15
+                    .Range("A6").RowHeight = 6
+                    .Range("A7:A13").RowHeight = 40
+                    .Range("A14").RowHeight = 6
+                    .Range("A15:A19").RowHeight = 40
+                End With
+                
+            'Save and close the variance report
+                With wbNew
+                    .SaveAs strPath & "VarianceReport_" & wsUnits.Cells(i, 1).Value & "_" & strMonthYear & strExtension
+                    .Close
+                End With
+                
+            'Tidy up
+                Set rngNew = Nothing
+                Set wsNew = Nothing
+                Set rngNew = Nothing
+                
+        Next i
+
+End Sub

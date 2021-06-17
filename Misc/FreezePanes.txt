@@ -1,0 +1,46 @@
+Sub FreezeAll()
+
+    'Declare variables
+        Dim wb As Workbook
+        Dim ws As Worksheet
+    
+    'Excel environment
+        With Application
+            .ScreenUpdating = False
+            .DisplayAlerts = False
+            .EnableEvents = False
+            .Calculation = xlCalculationManual
+        End With
+        
+    'Initialize
+        Set wb = ThisWorkbook
+        
+    'Do stuff
+        'Freeze panes on each worksheet
+            With wb
+                For Each ws In .Worksheets
+                    If ws.Tab.ColorIndex = 3 Then
+                        ws.Activate
+                        ActiveWindow.FreezePanes = False
+                        Application.Goto Reference:=Range("R1"), Scroll:=True
+                        Range("R10").Select
+                        ActiveWindow.FreezePanes = True
+                    End If
+                Next ws
+                
+                .Worksheets(1).Activate
+                Application.Goto Reference:=Range("A1"), Scroll:=True
+            End With
+            
+    'Tidy up
+        'Destroy objects
+            Set wb = Nothing
+            
+        'Excel environment
+            With Application
+                .ScreenUpdating = True
+                .DisplayAlerts = True
+                .EnableEvents = True
+                .Calculation = xlCalculationAutomatic
+            End With
+End Sub

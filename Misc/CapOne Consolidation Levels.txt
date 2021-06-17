@@ -1,0 +1,152 @@
+Private Sub AddConsolidationLevels(ws As Worksheet)
+
+    'Declare variables
+        Dim rng As Range
+        Dim C As Range
+        Dim MaxRows As Long
+        Dim strOrganization As String
+        Dim strConsolLevel1 As String
+        Dim strConsolLevel2 As String
+        
+    'Get last row
+        MaxRows = GetLast(ws:=ws, _
+                          RC:="r", _
+                          lngRowColumn:=1)
+                          
+    'Insert 2 columns for consolidation levels
+        With ws
+            .Range("B1:C1").EntireColumn.Insert
+        End With
+        
+    'Create a range object
+        With ws
+            Set rng = .Range(.Cells(1, 1), .Cells(MaxRows, 1))
+        End With
+        
+    'Add consolidation labels
+        For Each C In rng
+            strOrganization = C.Value
+
+            Select Case strOrganization
+                Case "CAPITAL ONE ROYAL RIDGE : 88003-001"
+                    strConsolLevel1 = "South"
+                    strConsolLevel2 = "None"
+                Case "CAPITAL ONE - PLANO TEXAS : 88007-001"
+                    strConsolLevel1 = "South"
+                    strConsolLevel2 = "Plano"
+                Case "CAPITAL ONE-PLANO-BLDG 2 : 88007-002"
+                    strConsolLevel1 = "South"
+                    strConsolLevel2 = "Plano"
+                Case "CAPITAL ONE - PLANO BLDG 3 : 88007-003"
+                    strConsolLevel1 = "South"
+                    strConsolLevel2 = "Plano"
+                Case "CAPITAL ONE - PLANO BLDG 4 : 88007-004"
+                    strConsolLevel1 = "South"
+                    strConsolLevel2 = "Plano"
+                Case "CAPITAL ONE PLANO B5 : 88007-005"
+                    strConsolLevel1 = "South"
+                    strConsolLevel2 = "Plano"
+                Case "CAPITAL ONE PLANO B6 : 88007-006"
+                    strConsolLevel1 = "South"
+                    strConsolLevel2 = "Plano"
+                Case "CAPITAL ONE - PLANO CONF CENTR : 88007-011"
+                    strConsolLevel1 = "South"
+                    strConsolLevel2 = "Plano"
+                Case "CAPITAL ONE-KNOLLS I-TB : 88001-006"
+                    strConsolLevel1 = "CVA"
+                    strConsolLevel2 = "Innsbrook"
+                Case "CAPITAL ONE-KNOLLS III : 88001-049"
+                    strConsolLevel1 = "CVA"
+                    strConsolLevel2 = "Innsbrook"
+                Case "CAPITAL ONE JRC II - CAFETERIA : 88001-023"
+                    strConsolLevel1 = "CVA"
+                    strConsolLevel2 = "CVA"
+                Case "CAPITAL ONE KNOLLS 4/5 : 88001-091"
+                    strConsolLevel1 = "CVA"
+                    strConsolLevel2 = "Innsbrook"
+                Case "CAPITAL ONE LIBERTY : 88001-090"
+                    strConsolLevel1 = "CVA"
+                    strConsolLevel2 = "Innsbrook"
+                Case "CAPITAL ONE LAS VEGAS : 88014-001"
+                    strConsolLevel1 = "West"
+                    strConsolLevel2 = "West"
+                Case "CAPITAL ONE LAS VEGAS MARKET : 88014-801"
+                    strConsolLevel1 = "West"
+                    strConsolLevel2 = "West"
+                Case "CAPITAL ONE - METTAWA IL : 88011-001"
+                    strConsolLevel1 = "Midwest"
+                    strConsolLevel2 = "Midwest"
+                Case "CAPITAL ONE TIGARD : 88013-001"
+                    strConsolLevel1 = "West"
+                    strConsolLevel2 = "West"
+                Case "CAP ONE TIGARD MICRO MARKET : 88013-801"
+                    strConsolLevel1 = "West"
+                    strConsolLevel2 = "West"
+                Case "CAPITAL ONE NORTH SHORE MICRO : 88001-093"
+                    strConsolLevel1 = "CVA"
+                    strConsolLevel2 = "Innsbrook"
+                Case "CAPITAL ONE - CHESAPEAKE VA : 88010-001"
+                    strConsolLevel1 = "CVA"
+                    strConsolLevel2 = "CVA"
+                Case "CAPITAL ONE SIOUX FALLS : 88008-001"
+                    strConsolLevel1 = "Midwest"
+                    strConsolLevel2 = "Midwest"
+                Case "CAPITAL ONE - SIOUX FALLS, SD : 88008-801"
+                    strConsolLevel1 = "Midwest"
+                    strConsolLevel2 = "Midwest"
+                Case "CAPITAL ONE-MAINT & REPAIR : 88001-011"
+                    strConsolLevel1 = "R&M"
+                    strConsolLevel2 = "R&M"
+                Case "CAPITAL ONE TEXAS R&M : 88007-021"
+                    strConsolLevel1 = "R&M"
+                    strConsolLevel2 = "R&M"
+                Case "CAPITAL ONE LAS VEGAS R&M : 88014-011"
+                    strConsolLevel1 = "R&M"
+                    strConsolLevel2 = "R&M"
+                Case "CAPITAL ONE ILLINOIS R&M : 88011-011"
+                    strConsolLevel1 = "R&M"
+                    strConsolLevel2 = "R&M"
+                Case "CAPITAL ONE SIOUX FALLS R&M : 88008-011"
+                    strConsolLevel1 = "R&M"
+                    strConsolLevel2 = "R&M"
+                Case "CAPITAL ONE TIGARD R&M : 88013-011"
+                    strConsolLevel1 = "R&M"
+                    strConsolLevel2 = "R&M"
+                Case "CAPITAL ONE-OVERHEAD/LABOR : 88001-014"
+                    strConsolLevel1 = "CVA"
+                    strConsolLevel2 = "CAPITAL ONE-OVERHEAD/LABOR : 88001-014"
+                Case "CAPITAL ONE CONTROLLER : 88001-033"
+                    strConsolLevel1 = "CVA"
+                    strConsolLevel2 = "CAPITAL ONE-OVERHEAD/LABOR : 88001-014"
+                Case "CAPITAL ONE NCE : 88002-001"
+                    strConsolLevel1 = "P&L"
+                    strConsolLevel2 = "P&L"
+                Case "CAPITAL ONE CANADA BARISTA : 87700-001"
+                    strConsolLevel1 = "CAN"
+                    strConsolLevel2 = "CAN"
+                Case "CAPITAL ONE VENDING TORONTO : 89656-301"
+                    strConsolLevel1 = "CAN"
+                    strConsolLevel2 = "CAN"
+                Case "CAPITAL ONE VENDING MONTREAL : 89656-302"
+                    strConsolLevel1 = "CAN"
+                    strConsolLevel2 = "CAN"
+                Case "CAPITAL ONE VENDINGTORONTO BAR : 89656-303"
+                    strConsolLevel1 = "CAN"
+                    strConsolLevel2 = "CAN"
+                Case "LIBERTY PROPERTY LIMITED PART  : 77422-001"
+                    strConsolLevel1 = "Tampa"
+                    strConsolLevel2 = "Tampa"
+                Case Else
+                    strConsolLevel1 = "MISSING"
+                    strConsolLevel2 = "MISSING"
+            End Select
+            
+        Next C
+        
+        'Add headers
+            With ws
+                .Cells(1, 2).Value = "Con_L1"
+                .Cells(1, 3).Value = "Con_L2"
+            End With
+                          
+End Sub

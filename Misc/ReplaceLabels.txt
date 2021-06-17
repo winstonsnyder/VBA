@@ -1,0 +1,71 @@
+Private Sub ReplaceHeaders(ws As Worksheet, _
+                           strYTDLabel As String)
+    
+    'Declare variables
+        Dim MaxColumns As Long
+        Dim rng As range
+        Dim C As range
+        Dim strHeader As String
+        Dim NewHeader As String
+        
+    'Get max columns
+        MaxColumns = GetLast(ws:=ws, _
+                             RC:="c", _
+                             lngRowColumn:=6) - 1
+                             
+    'Create range object
+        With ws
+            Set rng = .range(.Cells(6, 2), .Cells(6, MaxColumns))
+        End With
+        
+    'Copy / paste as values
+        For Each C In rng
+            strHeader = C.Value
+            Select Case strHeader
+                Case "Period 01"
+                    NewHeader = "1/1/2014"
+                Case "Period 02"
+                    NewHeader = "2/1/2014"
+                Case "Period 03"
+                    NewHeader = "3/1/2014"
+                Case "Period 04"
+                    NewHeader = "4/1/2014"
+                Case "Period 05"
+                    NewHeader = "5/1/2014"
+                 Case "Period 06"
+                    NewHeader = "6/1/2014"
+                 Case "Period 07"
+                    NewHeader = "7/1/2014"
+                 Case "Period 08"
+                    NewHeader = "8/1/2014"
+                 Case "Period 09"
+                    NewHeader = "9/1/2014"
+                 Case "Period 10"
+                    NewHeader = "10/1/2014"
+                 Case "Period 11"
+                    NewHeader = "11/1/2014"
+                 Case "Period 12"
+                    NewHeader = "12/1/2014"
+            End Select
+                
+                C.Replace _
+                    What:=strHeader, _
+                    Replacement:=CDate(NewHeader), _
+                    LookAt:=xlWhole, _
+                    SearchOrder:=xlByColumns, _
+                    MatchCase:=False
+        Next C
+                
+            'Range number format
+                rng.NumberFormat = "MM/DD/YYYY"
+                
+            'Autofit width
+                rng.Columns.AutoFit
+                
+        'Year-to-date label
+            ws.Cells(6, MaxColumns + 1).Value = strYTDLabel
+ 
+    'Tidy up
+        Set rng = Nothing
+        
+End Sub

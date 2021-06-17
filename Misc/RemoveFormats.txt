@@ -1,0 +1,22 @@
+Private Sub RemoveFormats(ws As Worksheet)
+
+    'Declare variables
+        Dim x As Long
+        Dim rng As Range
+  
+    'Create range object
+        With ws
+            x = GetLast(ws:=ws, _
+                        RC:="r", _
+                        lngRowColumn:=3)
+                        
+            Set rng = .Range(.Cells(1, 1), .Cells(x, 4))
+        End With
+        
+    'Remove formats
+        rng.ClearFormats
+            
+    'Tidy up
+        Set rng = Nothing
+
+End Sub

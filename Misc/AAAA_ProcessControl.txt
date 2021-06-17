@@ -1,0 +1,34 @@
+Sub ProcessControl()
+
+    'Declare variables
+        Dim wb As Workbook
+        Dim ws As Worksheet
+    
+    'Excel environment
+        With Application
+            .ScreenUpdating = False
+            .DisplayAlerts = False
+            .EnableEvents = False
+            .Calculation = xlCalculationManual
+        End With
+        
+    'Initialize
+        Set wb = ThisWorkbook
+        Set ws = wb.Worksheets("AccntMap")
+        
+    'Do stuff
+        Call TrimData(ws:=ws)
+    
+    'Tidy up
+        'Destroy objects
+            Set ws = Nothing
+            Set wb = Nothing
+            
+        'Excel environment
+            With Application
+                .ScreenUpdating = True
+                .DisplayAlerts = True
+                .EnableEvents = True
+                .Calculation = xlCalculationAutomatic
+            End With
+End Sub

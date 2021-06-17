@@ -1,0 +1,6 @@
+Private Sub SetZoomLevel(ws As Worksheet)
+
+    ws.Select
+    ActiveWindow.Zoom = 75
+    
+End Sub

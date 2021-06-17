@@ -1,0 +1,33 @@
+Private Sub AddHeader(ws As Worksheet)
+
+    'Declare variables
+        Dim x As Long
+        Dim rng As Range
+  
+        With ws
+            'If there is anything in the first row insert a new row
+                If Not IsEmpty(.Range("A1")) Then
+                    .Range("A1").EntireRow.Insert
+                End If
+                
+            'Add headers
+                .Range("A1").Value = "Location"
+                .Range("B1").Value = "Scenario"
+                .Range("C1").Value = "Category"
+                .Range("D1").Value = "Subcategory"
+                .Range("E1").Value = "1/1/2014"
+                .Range("F1").Value = "2/1/2014"
+                .Range("G1").Value = "3/1/2014"
+                .Range("H1").Value = "4/1/2014"
+                .Range("I1").Value = "5/1/2014"
+                .Range("J1").Value = "6/1/2014"
+                .Range("K1").Value = "7/1/2014"
+                .Range("L1").Value = "8/1/2014"
+                .Range("M1").Value = "9/1/2014"
+                .Range("N1").Value = "10/1/2014"
+                .Range("O1").Value = "11/1/2014"
+                .Range("P1").Value = "12/1/2014"
+                .Range("Q1").Value = "TotalYear"
+        End With
+        
+End Sub

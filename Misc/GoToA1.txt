@@ -1,0 +1,16 @@
+Sub GoToA1()
+
+    Dim wb As Workbook
+    Dim ws As Worksheet
+    
+    Set wb = ThisWorkbook
+    
+    With wb
+        For Each ws In .Worksheets
+            Application.GoTo ws.Range("A1"), True
+        Next ws
+        .Worksheets(1).Select
+    End With
+    
+    Set wb = Nothing
+End Sub

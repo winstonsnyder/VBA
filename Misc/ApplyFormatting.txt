@@ -1,0 +1,25 @@
+Private Sub ApplyFormatting(ws As Worksheet)
+
+    'Declare variables
+        Dim x As Long
+        Dim rng As Range
+  
+    'Create range object
+        With ws
+            x = GetLast(ws:=ws, _
+                        RC:="r", _
+                        lngRowColumn:=3)
+                        
+            Set rng = .Range(.Cells(1, 1), .Cells(x, 11))
+        End With
+        
+    'Apply formatting
+        With rng
+            .Font.Name = "Calibri"
+            .Font.Size = 11
+        End With
+            
+    'Tidy up
+        Set rng = Nothing
+
+End Sub

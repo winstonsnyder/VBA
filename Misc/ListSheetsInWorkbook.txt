@@ -1,0 +1,48 @@
+Option Explicit
+
+Sub ListAllSheets()
+
+    Dim wb As Workbook
+    Dim ws As Worksheet
+    Dim wsList As Worksheet
+    
+    Set wb = ThisWorkbook
+    Set wsList = wb.Worksheets("ListSheets")
+    
+    With wb
+        For Each ws In .Worksheets
+            If ws.Name <> "ListSheets" Then
+                wsList.Cells(ws.Index, 1).Value = ws.Name
+            End If
+        Next ws
+    End With
+    
+    Set wsList = Nothing
+    Set wb = Nothing
+End Sub
+
+
+
+
+Option Explicit
+
+Sub ListAllSheets()
+
+    Dim wb As Workbook
+    Dim ws As Worksheet
+    Dim wsAnalysis As Worksheet
+    
+    Set wb = ThisWorkbook
+    Set wsAnalysis = wb.Worksheets("Analysis")
+    
+    With wb
+        For Each ws In .Worksheets
+            If ws.Name <> "Analysis" Then
+                wsAnalysis.Cells(ws.Index, 1).Value = ws.Name
+            End If
+        Next ws
+    End With
+    
+    Set wsAnalysis = Nothing
+    Set wb = Nothing
+End Sub

@@ -1,0 +1,41 @@
+Sub ResizeTable()
+
+    'Declare variables
+        Dim wb As Workbook
+        Dim ws As Worksheet
+        Dim rng As Range
+        Dim lo As ListObject
+        Dim RowEnd As Long
+        Dim ColumnEnd As Long
+    
+    'Initialize
+        Set wb = ThisWorkbook
+        Set ws = wb.Worksheets("Data")
+        
+    'Get last row of data
+        RowEnd = GetLastRow(ws:=ws, _
+                            lngRowColumn:=1, _
+                            Direction:="Down")
+                            
+        ColumnEnd = GetLast(ws:=ws, _
+                    RC:="c", _
+                    lngRowColumn:=1)
+                       
+    'Create a range object
+        With ws
+            Set rng = .Range(.Cells(1, 1), .Cells(RowEnd, ColumnEnd))
+        End With
+        
+    'Resize Excel Table (ListObject)
+        With ws
+            For Each lo In .ListObjects
+                lo.Resize rng
+            Next lo
+        End With
+        
+    'Tidy up
+        Set rng = Nothing
+        Set ws = Nothing
+        Set wb = Nothing
+
+End Sub

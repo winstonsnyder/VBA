@@ -1,0 +1,64 @@
+Option Explicit
+
+Sub ListAllFiles()
+
+
+'Author: Winston Snyder
+'Date: 11/26/2013
+'Purpose: Demonstrate looping through files in a folder using the FileSystemObject
+'Comment: Uses Late Binding
+'--------------------------------------
+
+'Declare variables
+    Dim wb As Workbook
+    Dim ws As Worksheet
+    Dim FSO As Object
+    Dim fsoFolder As Object
+    Dim fsoFile As Object
+    Dim strFolder As String
+    Dim i As Long
+
+'Excel environment - speed things up
+    With Application
+        .ScreenUpdating = False
+        .DisplayAlerts = False
+        .EnableEvents = False
+        .Calculation = xlCalculationManual
+    End With
+
+'Initialize variables
+    Set wb = ThisWorkbook
+    Set ws = wb.Worksheets(1)
+    Set FSO = CreateObject("Scripting.FileSystemObject")
+    i = 2
+    
+    'Prompt user to choose folder
+        strFolder = GetFDObjectName(strDialogType:="Folder")
+
+    'Get fso folder
+        Set fsoFolder = FSO.Getfolder(strFolder)
+
+'List files in folder
+    For Each fsoFile In fsoFolder.Files
+        ws.Cells(i, 1).Value = fsoFile.Name
+        i = i + 1
+    Next fsoFile
+
+'Add Header
+    ws.Cells(1, 1).Value = "FileName"
+
+'Tidy up
+    'Destroy objects
+        Set fsoFolder = Nothing
+        Set FSO = Nothing
+        Set ws = Nothing
+        Set wb = Nothing
+
+    'Restore Excel environment
+        With Application
+            .ScreenUpdating = True
+            .DisplayAlerts = True
+            .EnableEvents = True
+            .Calculation = xlCalculationAutomatic
+        End With
+End Sub

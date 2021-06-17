@@ -1,0 +1,24 @@
+Private Sub RemoveRowsNoLabels(ws As Worksheet)
+    
+    'Declare variables
+        Dim x As Long
+        Dim i As Long
+  
+    'Last row
+        With ws
+            x = GetLast(ws:=ws, _
+                        RC:="r", _
+                        lngRowColumn:=3)
+        End With
+        
+    'Delete row if col 3 or col 4 are blank
+    'Bottom up
+        With ws
+            For i = x To 1 Step -1
+                If IsEmpty(.Cells(i, 3)) And IsEmpty(.Cells(i, 4)) Then
+                    .Cells(i, 3).EntireRow.Delete shift:=xlUp
+                End If
+            Next i
+        End With
+    
+End Sub

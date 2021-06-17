@@ -1,0 +1,47 @@
+Option Explicit
+
+Sub DeleteBlanks()
+
+    Dim wb As Workbook
+    Dim ws As Worksheet
+    Dim MaxRows As Long
+    Dim i As Long
+    
+    With Application
+        .ScreenUpdating = False
+        .DisplayAlerts = False
+        .EnableEvents = False
+        .Calculation = xlCalculationManual
+    End With
+    
+    Set wb = ThisWorkbook
+    Set ws = wb.Worksheets("Data")
+    
+    'Get last row
+        MaxRows = ws.Cells(Rows.Count, 1).End(xlUp).Row
+        
+    'Delete blanks - bottom up
+        With ws
+            For i = MaxRows To 1 Step -1
+                If .Cells(i, 1).Value = 0 Or IsEmpty(.Cells(i, 1)) Then
+                    .Cells(i, 1).EntireRow.Delete
+                End If
+            Next i
+        End With
+        
+    'Tidy up
+        Set ws = Nothing
+        Set wb = Nothing
+            
+        With Application
+            .ScreenUpdating = False
+            .DisplayAlerts = False
+            .EnableEvents = False
+            .Calculation = xlCalculationManual
+        End With
+        
+    
+    
+End Sub
+
+

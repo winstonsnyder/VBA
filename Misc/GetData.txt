@@ -1,0 +1,132 @@
+Private Sub GetData(wb As Workbook, _
+                    wsWorking As Worksheet, _
+                    lngRowBegin As Long, _
+                    lngRowEnd As Long, _
+                    lngColumnBegin As Long, _
+                    lngColumnEnd As Long, _
+                    strProcess As String)
+
+    'Declare variables
+        Dim ws As Worksheet
+        Dim rngCopy As Range
+        Dim rngDestination As Range
+        Dim rngSheetName As Range
+        Dim rng As Range
+        Dim NewLastRow As Long
+        Dim lastDataRow As Long
+        Dim lngDestinationColumn As Long
+        Dim lngBeginRow As Long
+        Dim lngEndRow As Long
+        Dim lngColumn As Long
+        Dim x As Long
+        Dim strScenario As String
+        Dim blnAdd As Boolean
+
+    'Initialize objects and variables
+        If strProcess = "Actual" Then blnAdd = True
+        
+    'Copy actual data from Red Tabs
+        For Each ws In wb.Worksheets
+            If ws.Tab.ColorIndex = 3 Then
+                'Range to Copy
+                    With ws
+                        Set rngCopy = .Range(.Cells(lngRowBegin, lngColumnBegin), .Cells(lngRowEnd, lngColumnEnd))
+                    End With
+                    
+                'Destination range
+                    With wsWorking
+                        lastDataRow = GetLast(ws:=wsWorking, _
+                                              RC:="r", _
+                                              lngRowColumn:=2) + 1
+                                  
+                        If strProcess = "Actual" Then
+                            If blnAdd = True Then
+                                lngDestinationColumn = 2
+                            Else
+                                lngDestinationColumn = 3
+                            End If
+                        Else
+                            lngDestinationColumn = 3
+                        End If
+                        
+                        Set rngDestination = .Range(.Cells(lastDataRow, lngDestinationColumn), .Cells(lastDataRow, lngDestinationColumn))
+                        
+                        'Copy / paste data
+                            rngCopy.Copy
+                            rngDestination.PasteSpecial (xlPasteValuesAndNumberFormats)
+                            
+                        'Add sheet name
+                            If blnAdd = True Then
+                                
+                                lngBeginRow = 2
+                                lngEndRow = GetLast(ws:=wsWorking, _
+                                                             RC:="r", _
+                                                             lngRowColumn:=2)
+                                lngColumn = 1
+                            Else
+                                lngBeginRow = GetLast(ws:=wsWorking, _
+                                                      RC:="r", _
+                                                      lngRowColumn:=1) + 1
+                                                      
+                                lngEndRow = GetLast(ws:=wsWorking, _
+                                                    RC:="r", _
+                                                    lngRowColumn:=3)
+                                lngColumn = 1
+                            End If
+                                                 
+                            Set rngSheetName = .Range(.Cells(lngBeginRow, lngColumn), .Cells(lngEndRow, lngColumn))
+                            rngSheetName.Value = ws.Name
+                            
+                        'Add scenario
+                            If strProcess = "Actual" Then
+                                If blnAdd = True Then
+                                    .Range("B1").EntireColumn.Insert
+                                    lngBeginRow = 2
+                                    lngEndRow = GetLast(ws:=wsWorking, _
+                                                        RC:="r", _
+                                                        lngRowColumn:=3)
+                                    lngColumn = 2
+                                Else
+                                    lngBeginRow = GetLast(ws:=wsWorking, _
+                                                          RC:="r", _
+                                                          lngRowColumn:=2) + 1
+                                                          
+                                    lngEndRow = GetLast(ws:=wsWorking, _
+                                                        RC:="r", _
+                                                        lngRowColumn:=3)
+                                    lngColumn = 2
+                                End If
+                            Else
+                                lngBeginRow = GetLast(ws:=wsWorking, _
+                                                          RC:="r", _
+                                                          lngRowColumn:=2) + 1
+                                                          
+                                lngEndRow = GetLast(ws:=wsWorking, _
+                                                    RC:="r", _
+                                                    lngRowColumn:=3)
+                                lngColumn = 2
+                            End If
+                                        
+                            Set rng = .Range(.Cells(lngBeginRow, lngColumn), .Cells(lngEndRow, lngColumn))
+                            
+                            Select Case lngColumnEnd
+                                Case 15
+                                    strScenario = "CFY2014Actual"
+                                Case Else
+                                    strScenario = "CFY2014Budget"
+                            End Select
+                            
+                            rng.Value = strScenario
+                    End With
+            End If
+            blnAdd = False
+        Next ws
+        
+    'Tidy up
+        'Destroy objects
+            Set rng = Nothing
+            Set rngCopy = Nothing
+            Set rngDestination = Nothing
+            Set rngSheetName = Nothing
+            
+End Sub

@@ -1,0 +1,9 @@
+Private Sub AdjustColumnWidths(ws As Worksheet)
+
+    With ws
+        .Columns("A:D").AutoFit
+        .Columns("E:Q").ColumnWidth = 15
+    End With
+
+
+End Sub
