@@ -1,0 +1,23 @@
+Sub GetShapeDimensions()
+    
+    Dim wb As Workbook
+    Dim ws As Worksheet
+    Dim sh As Shape
+    
+    Set wb = ThisWorkbook
+    Set ws = wb.Worksheets("Sheet1")
+    
+    With ws
+        For Each sh In .Shapes
+            Debug.Print "Shape Type: " & sh.AutoShapeType
+            Debug.Print "Width: " & sh.Width
+            Debug.Print "Height: " & sh.Height
+            Debug.Print "====================="
+        Next sh
+    End With
+    
+    Set ws = Nothing
+    Set wb = Nothing
+    
+
+End Sub
