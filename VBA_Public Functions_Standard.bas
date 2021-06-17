@@ -8,6 +8,7 @@
 '//CustomSplit
 '//ScrollToCell
 '//AddWorksheet
+'//GetLast
 
 =======================================================================
 Attribute VB_Name = "M_Fx"
@@ -207,6 +208,31 @@ Public Function AddWorksheet(wb As Workbook, _
         
     'Tidy up
         Set ws = Nothing
+
+End Function
+            
+'=================================================================================
+Public Function GetLast(ws As Worksheet, _
+                        RC As String, _
+                        Optional ByVal lngRowColumn As Long = 1) As Long
+                        
+    'Requirements :   ws - A worksheet object
+    '                 RC - A string as either "r" or "c" to specify row or column
+    '                 lngRowColumn - Either the row or column number to be used
+    
+    'Declare variables
+        Dim x       As Long
+
+    'Get last row or column
+        Select Case RC
+            Case "r"
+                x = ws.Cells(Rows.Count, lngRowColumn).End(xlUp).Row
+            Case Else
+                x = ws.Cells(lngRowColumn, Columns.Count).End(xlToLeft).Column
+        End Select
+        
+    'Pass value to function
+        GetLast = x
 
 End Function
 
