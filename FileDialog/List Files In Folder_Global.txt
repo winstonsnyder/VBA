@@ -1,0 +1,7 @@
+
+'MsoFileDialogType Enumeration
+    Public Const gclmsoFileDialogFilePicker = 3 'File picker dialog box.
+    Public Const gclmsoFileDialogFolderPicker = 4 'Folder picker dialog box.
+    Public Const gclmsoFileDialogOpen = 1 'Open dialog box.
+    Public Const gclmsoFileDialogSaveAs = 2 'Save As dialog box.
+
