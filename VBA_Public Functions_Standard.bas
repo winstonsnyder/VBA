@@ -6,6 +6,8 @@
 '//Get User Range
 '//CleanMAX by Daniel Ferry
 '//CustomSplit
+'//ScrollToCell
+'//AddWorksheet
 
 =======================================================================
 Attribute VB_Name = "M_Fx"
@@ -143,6 +145,71 @@ Public Function CustomSplit(strParent As String, _
     CustomSplit = str
                    
 End Function
+        
+'==================================================================================================
+Public Function ScrollToCell(wb As Workbook, _
+                             Optional ByVal lngRow As Long = 1, _
+                             Optional ByVal lngColumn As Long = 1) As String
+    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    'ScrollToCell
+    'Scroll to cell(lngRow,lngColumn) on each worksheet in thew workbook
+    
+    'Parameters :
+    'Workbook   :   Required, a workbook object
+    'lngRow     :   Row to scroll to, optional, Default = Row 1
+    'lngColumn  :   Column to scroll to, optional, Default = column 1
+    '
+    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+    'Declare variables
+        Dim ws As Worksheet
+        Dim strAddress As String
+    
+    'Scroll to cell(lngRow,lngColumn) on each worksheet in the workbook
+        With wb
+            For Each ws In .Worksheets
+                Application.Goto Reference:=ws.Cells(lngRow, lngColumn), _
+                                 Scroll:=True
+            Next ws
+        End With
+        
+    'Get address of activecell
+        strAddress = ActiveCell.Address
+        
+    'Pass value to function
+        ScrollToCell = strAddress
+    
+End Function
+      
+'=============================================================================================
+Public Function AddWorksheet(wb As Workbook, _
+                             strSheetName As String) As Worksheet
+
+    'Declare variables
+        Dim ws As Worksheet
+        Dim strMySheetName As String
+
+    'Add worksheet if it does not exist
+        On Error Resume Next
+        Set ws = Sheets(strSheetName)
+'        On Error GoTo 0
+        If Not ws Is Nothing Then
+            'The worksheet already exists
+                ws.UsedRange.ClearContents
+        Else
+            'The worksheet does not exist
+                Set ws = wb.Sheets.Add(After:=wb.Sheets(wb.Sheets.Count))
+                ws.Name = strSheetName
+        End If
+        
+    'Pass object to function
+        Set AddWorksheet = ws
+        
+    'Tidy up
+        Set ws = Nothing
+
+End Function
+
 
 
 
