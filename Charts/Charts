@@ -1,0 +1,33 @@
+Option Explicit
+Sub ScaleAxes()
+
+    'Author         :   Jon Peltier
+    'Modified By    :   Winston Snyder
+    'Modifed Date   :   6/18/2021
+    'URL            :   https://peltiertech.com/link-excel-chart-axis-scale-to-values-in-cells/
+    'Purpose        :   Use cell values to set axes scales
+    
+    'Declare objects
+        Dim wb As Workbook
+        Dim wsSettings As Worksheet
+    
+    'Initialize objects
+        Set wb = ThisWorkbook
+        Set wsSettings = wb.Worksheets("Settings")
+    
+    'Horizontal axis
+        With ActiveChart.Axes(xlCategory, xlPrimary)
+            .MaximumScale = wsSettings.Range("D4").Value    'x Max
+            .MinimumScale = wsSettings.Range("C4").Value     'x Min
+        End With
+        
+    'Vertical axis
+        With ActiveChart.Axes(xlValue, xlPrimary)
+            .MaximumScale = wsSettings.Range("D5").Value    'y Max
+            .MinimumScale = wsSettings.Range("C5").Value     'y Min
+        End With
+        
+    'Tidy up
+        Set wsSettings = Nothing
+        Set wb = Nothing
+End Sub
