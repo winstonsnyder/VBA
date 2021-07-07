@@ -10,8 +10,25 @@
 '//AddWorksheet
 '//GetLast
 '//Workbooks
+'//Environment
 
 =======================================================================
+With Application
+  .Calculation = XLCalculationManual
+  .Screenupdating = False
+  .DisplayStatusBar = False
+  .EnableEvents = False
+  .DisplayAlerts = False
+End with
+
+With Application
+  .Calculation = XLCalculationAutomatic
+  .Screenupdating = True
+  .DisplayStatusBar = True
+  .EnableEvents = True
+  .DisplayAlerts = True
+End with
+
 For Each wb in Workbooks
 If wb.Name Like "*CL_Inventory_Merge*" Then
   Set wb_Main = wb
