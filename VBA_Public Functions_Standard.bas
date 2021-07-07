@@ -9,8 +9,16 @@
 '//ScrollToCell
 '//AddWorksheet
 '//GetLast
+'//Workbooks
 
 =======================================================================
+For Each wb in Workbooks
+If wb.Name Like "*CL_Inventory_Merge*" Then
+  Set wb_Main = wb
+    Exit For
+End if
+Next wb  
+
 Attribute VB_Name = "M_Fx"
 Public Function GetLastColumn(ws As Worksheet, _
                               row_number As Long) As Long
