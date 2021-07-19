@@ -29,6 +29,8 @@ With Application
   .DisplayAlerts = True
 End with
 
+'//Workbooks
+'//=========================================================================
 For Each wb in Workbooks
 If wb.Name Like "*CL_Inventory_Merge*" Then
   Set wb_Main = wb
@@ -36,7 +38,68 @@ If wb.Name Like "*CL_Inventory_Merge*" Then
 End if
 Next wb  
 
-Attribute VB_Name = "M_Fx"
+
+Sub UnhideAllSheets
+  Dim wb as workbook
+  dim ws as worksheet
+  
+  Set wb = thisworkbook
+    
+    with wb
+      For each ws in .worksheets
+      ws.visible = true
+    Next ws
+    end with
+End sub
+
+
+
+sub HideListedSheets
+  dim wb as workkbook
+  dim ws as worksheet
+  
+  dim last_row as long
+  dim i as long
+  dim sheetname as string
+  
+With Application
+  .Calculation = XLCalculationManual
+  .Screenupdating = False
+  .DisplayStatusBar = False
+  .EnableEvents = False
+  .DisplayAlerts = False
+End with
+  
+  Set wb = thisworkbook
+    last_row = GetLastRow(ws:=Criteria, _
+      column_number:=4)
+    
+    with wb
+      For i = 2 to last_row
+      SheetName = Criteria.cells(i,4).value
+      .worksheets(sheetname).visible = false
+    Next i
+    end with
+  
+  Application.goto Reference:=Worksheets("Summary").Range("A1"), _
+  Scroll:=True
+  
+  'Tidy up
+  'Destroy objects
+  Set wb = nothing
+    
+    'Restore Excel Environment
+    With Application
+  .Calculation = XLCalculationAutomatic
+  .Screenupdating = True
+  .DisplayStatusBar = True
+  .EnableEvents = True
+  .DisplayAlerts = True
+End with
+  
+end sub
+
+'//==========================================================================
 Public Function GetLastColumn(ws As Worksheet, _
                               row_number As Long) As Long
 
