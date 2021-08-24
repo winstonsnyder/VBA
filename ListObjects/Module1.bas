@@ -1,4 +1,4 @@
-Attribute VB_Name = "ListObjects_RemoveDuplicates_1D"
+
 Option Explicit
 
 Sub ListObjects_RemoveDuplicates_1D()
