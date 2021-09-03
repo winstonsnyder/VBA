@@ -1,4 +1,3 @@
-Attribute VB_Name = "M_Wireframe"
 Option Explicit
 
 Sub Foo_Wireframe()
