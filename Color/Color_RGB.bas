@@ -7,3 +7,6 @@
 
 
 Public const gclBlueGrey as long = 6968388  'RGB(68,84,106)
+
+'Fill range with color
+rng.Interior.Color = RGB(217, 217, 217)
