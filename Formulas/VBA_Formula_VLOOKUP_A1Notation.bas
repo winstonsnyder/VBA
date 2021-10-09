@@ -1,8 +1,12 @@
-Attribute VB_Name = "M_Formula_A1_Notation"
 Option Explicit
 Sub foo()
 
-'=VLOOKUP("cat",A2:B4,2,FALSE)
+  'Purpose  : Use VBA to dynamically recreate a VLookup formula in this format
+  'Formula  : =VLOOKUP("cat",$A$2:$B$4,2,FALSE)
+  
+  'Use this with a few different approaches:
+  '1.) Prompt user (Inputbox) to enter begin/end search words/phrases
+  '2.) Prompt user to select a cell for begin column and end column. Use InputBox Type:=8.
 
 Dim wb As Workbook
 Dim ws As Worksheet
