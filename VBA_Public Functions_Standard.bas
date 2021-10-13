@@ -11,6 +11,7 @@
 '//GetLast
 '//Workbooks
 '//Environment
+'//GetFirstNonBlankCellInColumn
 
 =======================================================================
 With Application
@@ -323,6 +324,15 @@ Public Function GetLast(ws As Worksheet, _
         GetLast = x
 
 End Function
+      
+Public Function GetFirstNonBlankCellInColumn(ws As Worksheet, _
+                                             col_number As Long) As Long
+    With Columns(col_number)
+        GetFirstNonBlankCellInColumn = .Find(what:="*", after:=.Cells(1, 1), LookIn:=xlValues).Row
+    End With
+                                             
+End Function
+
 
 
 
