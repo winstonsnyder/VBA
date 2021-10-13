@@ -1,0 +1,14 @@
+Option Explicit
+Sub Close_Books()
+
+Dim wb as Workbook
+
+With Application
+  For each wb in .workbooks
+    If wb.name <> "x" then
+      wb.Close SaveChanges:=False
+    End if
+  Next wb
+End with
+
+End sub()
