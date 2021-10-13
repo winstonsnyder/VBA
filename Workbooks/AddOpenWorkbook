@@ -1,0 +1,18 @@
+Public Function HandleOpenWorkbooks(WorkbookFullName as String) as Workbook
+
+Dim wb as workbook
+
+For each wb in workbooks
+  If wb.FullName = WorkbookFullName Then Exit For
+Next wb
+
+If wb Is Nothing Then
+  If Len(Dir(WorkbookFullName))>0 Then
+    Set wb = Workbooks.Open(WorkbookFullName)
+  End if
+End if
+
+Set HandleOpenWorkbooks = wb
+
+End Function
+    
