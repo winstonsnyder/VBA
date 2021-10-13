@@ -12,6 +12,8 @@
 '//Workbooks
 '//Environment
 '//GetFirstNonBlankCellInColumn
+'//GetLastUsedRow
+'//GetLastUsedColumn
 
 =======================================================================
 With Application
