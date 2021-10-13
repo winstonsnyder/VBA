@@ -332,6 +332,34 @@ Public Function GetFirstNonBlankCellInColumn(ws As Worksheet, _
     End With
                                              
 End Function
+      
+Public Function GetLastUsedRow(ws As Worksheet) As Long
+
+    'Purpose    :   Get last used row on a worksheet
+    'Parameters :
+    '1.)    ws  :   Required parameter. A Worksheet Object.
+    '
+    '=============================================================================================================================
+    '=============================================================================================================================
+
+    GetLastUsedRow = ws.Range("A1").SpecialCells(xlCellTypeLastCell).Row
+
+End Function
+
+Public Function GetLastUsedColumn(ws As Worksheet) As Long
+
+    'Purpose    :   Get last used column on a worksheet
+    'Parameters :
+    '1.)    ws  :   Required parameter. A Worksheet Object.
+    '
+    '=============================================================================================================================
+    '=============================================================================================================================
+
+    GetLastUsedColumn = ws.Range("A1").SpecialCells(xlCellTypeLastCell).Column
+
+End Function      
+      
+      
 
 
 
