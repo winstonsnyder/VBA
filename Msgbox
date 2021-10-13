@@ -1,0 +1,7 @@
+msgbox Prompt:=x, _
+       Title:=x, _
+       Buttons:=x
+       
+if msgbox(Prompt:=x, _
+          Title:=x, _
+          Buttons:=x) = vbCancel Then Exit Sub
