@@ -14,6 +14,7 @@
 '//GetFirstNonBlankCellInColumn
 '//GetLastUsedRow
 '//GetLastUsedColumn
+'//AddSheetEndSimple
 
 =======================================================================
 With Application
@@ -359,7 +360,20 @@ Public Function GetLastUsedColumn(ws As Worksheet) As Long
 
     GetLastUsedColumn = ws.Range("A1").SpecialCells(xlCellTypeLastCell).Column
 
-End Function      
+End Function
+      
+      
+Public Function AddSheetEndSimple(wb As Workbook, _
+                                  wsname As String) As Worksheet
+
+
+    With wb
+        Set AddSheet = .Worksheets.Add(After:=.Worksheets(.Worksheets.Count))
+    End With
+    
+    AddSheet.Name = wsname
+
+End Function
       
       
 
