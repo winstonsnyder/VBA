@@ -1,1 +1,5 @@
+//First Day of Week
+//Where ,1 gives enumeration for first day of week, etc...
+//https://support.microsoft.com/en-us/office/weekday-function-60e44483-2ed1-439f-8bd0-e404c190949a
 
+=Date-WEEKDAY(Date,1)+1
