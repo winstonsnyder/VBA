@@ -1,0 +1,19 @@
+Private Sub cmdCancel_Click()
+
+Dim wb as workbook
+dim ws as worksheet
+
+with ws
+	.range("k10:M10").clear
+	.range("K10") = "User clicked cancel"
+	.range("K10:M10").interior.color = vbyellow
+end with
+
+set wb = nothing
+
+unload me
+
+'Return to Table of Contents
+GoToTOC
+
+end sub
