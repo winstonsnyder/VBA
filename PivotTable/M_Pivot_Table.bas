@@ -194,4 +194,34 @@ ErrHandler:
   
 End Function
 
+Public Sub FormatPivotTable(pt As PivotTable, _
+                            Optional ByVal GrandTotalRow As Boolean = True)
+                            
+    'Objects
+        Dim pf As PivotField
+        
+    'Pivot Table formatting
+        Select Case GrandTotalRow
+            Case True
+                With pt
+                    .RowAxisLayout xlTabularRow
+                    .RepeatAllLabels xlRepeatLabels
+                    .PivotFields("Sum of Commit (USD)").NumberFormat = "$#,##0.00"
+                    .ColumnGrand = False
+                    .RowGrand = True
+                End With
+            Case Else
+                With pt
+                    .RowAxisLayout xlTabularRow
+                    .RepeatAllLabels xlRepeatLabels
+                    .PivotFields("Sum of Commit (USD)").NumberFormat = "$#,##0.00"
+                    .ColumnGrand = False
+                    .RowGrand = False
+                End With
+        End Select
+        
+End Sub
+                                                                                        
+                                                                                        
+
 
