@@ -1,1 +1,27 @@
+'Declare Variables
+  Dim DateTime as Date
+  Dim FileName as String
+  Dim FileYear as String
+  Dim FileMonth as String
+  Dim FileDay as String
+  Dim FileHour as String
+  Dim FileMinute as String
+  Dim FileSecond as String
+  Dim FileDateTime as String
+  
+'Load variables
+  DateTime = Now()
+  FileYear = Format(CStr(Year(DateTime)),"0000")
+  FileMonth = Format(CStr(Month(DateTime)),"00")
+  FileDay = Format(CStr(Day(DateTime)),"00")
+  FileHour = Format(CStr(Hour(DateTime)),"00")
+  FileMinute = Format(CStr(Minute(DateTime)),"00")
+  FileSecond = Format(CStr(Second(DateTime)),"00")
+  FileDateTime = FileYear & _
+                 FileMonth & _
+                 FileDay & _
+                 "_" & _
+                 FileHour & _
+                 FileMinute & _
+                 FileSecond
 
