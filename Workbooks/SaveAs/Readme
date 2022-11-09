@@ -1,1 +1,4 @@
-
+'Save as CSV file
+wbNew.SaveAs FilePath & ws.Name & ".csv", _
+             FileFormat:=xlCSVWindows, _
+             CreateBackup:=False
