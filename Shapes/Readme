@@ -1,1 +1,49 @@
+Sub AddShape()
+
+'Add a rounded recangle shape
+'Assuming no changes to standard column widths and row heights
+'Settings for shape:
+'Left is position from Left Edge
+'Top is position from top of sheet
+'770 is approx Col Q
+'230 is approx Row 17
+
+Dim wb as workbook
+Dim ws as worksheet
+Dim shp as Shape
+
+Set wb = ThisWorkbook
+Set ws = wb.Worksheets("Sheet1")
+Set shp = ws.Shapes.AddShape(msoShapeRoundedRectangle, 770, 230, 100, 50)
+
+'Add text
+  shp.TextFrame.Characters.Text = "Lorem ipsum dolor sit amet"
+  
+'Shape color
+  shp.Fill.ForeColor.RGB = vbRed
+  
+'Remove border
+  shp.Line.Visible = False
+  
+End Sub
+
+Sub DeleteShape()
+
+'Delete all shapes from a worksheet
+
+Dim wb as workbook
+Dim ws as worksheet
+Dim shp as shape
+
+Set wb = Thisworkbook
+Set ws = wb.worksheets("Sheet1")
+
+With ws
+  For eash shp in .Shapes
+    shp.Delete
+  Next shp
+End With
+
+End Sub
+
 
