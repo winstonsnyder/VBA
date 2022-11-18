@@ -1,0 +1,47 @@
+Option Explicit
+
+Sub foo()
+
+    Dim wb As Workbook
+    Dim wbnew As Workbook
+    Dim ws As Worksheet
+    Dim rngFilePath As Range
+    Dim rngFileName As Range
+    Dim rngFileNbr As Range
+    Dim rngFileExt As Range
+    
+    Dim FilePath As String
+    Dim FileName As String
+    Dim FileNbr As String
+    Dim FileExt As String
+    
+    Set wb = ThisWorkbook
+    Set ws = wb.Worksheets(1)
+    
+    With ws
+        Set rngFilePath = .Range(.Cells(1, 1), .Cells(1, 1))
+        Set rngFileName = .Range(.Cells(2, 1), .Cells(2, 1))
+        Set rngFileNbr = .Range(.Cells(3, 1), .Cells(3, 1))
+        Set rngFileExt = .Range(.Cells(4, 1), .Cells(4, 1))
+    End With
+    
+    FilePath = CStr(rngFilePath.Value)
+    FileName = CStr(rngFileName.Value)
+    FileNbr = CStr(rngFileNbr.Value)
+    FileExt = CStr(rngFileExt.Value)
+    
+    Set wbnew = Workbooks.Add
+    wbnew.SaveAs FilePath & _
+                 FileName & "_" & _
+                 FileNbr & _
+                 FileExt
+    wbnew.Close
+    
+    Set rngFilePath = Nothing
+    Set rngFileName = Nothing
+    Set rngFileNbr = Nothing
+    Set rngFileExt = Nothing
+    Set ws = Nothing
+    Set wbnew = Nothing
+    Set wb = Nothing
+End Sub
