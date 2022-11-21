@@ -1,1 +1,24 @@
+Option Explicit
 
+Public Function fxGetInputValue() as String
+
+    'Variables
+        Dim Message As String
+        Dim Title As String
+        Dim Default As String
+        Dim GetInputValue As String
+        
+    'Message prompt
+        Message = "Enter a value between 1 and 3"
+        
+    'Title
+        Title = "InputBox Demo"
+        
+    'Default value
+        Default = "1"
+        
+    'Display Input box
+    'Return results
+        fxGetInputValue = InputBox(Message, Title, Default)
+
+End Function
