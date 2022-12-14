@@ -1,0 +1,97 @@
+Option Explicit
+
+Sub List_DataModel_Tables_Fields()
+
+'Define Objects
+    Dim wb As Workbook
+    Dim wbNew As Workbook
+    Dim wsnew As Worksheet
+    Dim dm As Model
+    Dim dmt As ModelTable
+    Dim dmcn As ModelColumnName
+
+'Define variables
+    Dim path As String
+    Dim fullpath As String
+    Dim i As Long                           'Count all fields in table
+    Dim x As Long                           'Loop through each field
+    Dim j As Long                           'Output row
+    Dim timestamp As String
+    Dim flag As Boolean
+
+'Filename components for output file
+    timestamp = Format(Now(), "YYYYMMDD_HHMMSS")
+    Const prepath As String = "C:"
+    Const fileextension As String = ".xlsx"
+    path = Environ("Homepath")
+    fullpath = prepath & path
+    Const filename As String = "\Data Model Tables_"
+
+'Turn off Excel environment - speed things up
+    With Application
+      .Calculation = xlCalculationManual
+      .ScreenUpdating = False
+      .DisplayStatusBar = False
+      .EnableEvents = False
+      .DisplayAlerts = False
+    End With
+    
+'Initialize objects
+    Set wb = ThisWorkbook
+    Set dm = wb.Model
+    Set wbNew = Workbooks.Add
+    Set wsnew = wbNew.Worksheets(1)
+    
+'Initialize variables
+    flag = True
+    
+'Document data model tables and fields
+    With dm
+        For Each dmt In .ModelTables
+            i = dmt.ModelTableColumns.Count
+            If flag Then
+                j = 2
+            Else
+                j = GetRows(ws:=wsnew) + 1
+            End If
+            For x = 1 To i
+                wsnew.Cells(j, 1).Value = dmt.Name
+                wsnew.Cells(j, 2).Value = dmt.ModelTableColumns(x).Name
+                j = j + 1
+            Next x
+            flag = False
+        Next dmt
+    End With
+
+'Headers
+    With wsnew
+        .Cells(1, 1).Value = "TableName"
+        .Cells(1, 2).Value = "ColumnName"
+    End With
+    
+'Save output file
+    Debug.Print fullpath & filename & timestamp & fileextension
+    wbNew.SaveAs fullpath & filename & timestamp & fileextension
+
+'Close output file
+    wbNew.Close
+    
+'User messages
+    MsgBox "Output file saved: " & fullpath & filename & timestamp & fileextension
+
+'Tidy up
+    'Destroy objects
+        Set dm = Nothing
+        Set wsnew = Nothing
+        Set wbNew = Nothing
+        Set wb = Nothing
+        
+    'Restore Excel Environment
+        With Application
+          .Calculation = xlCalculationAutomatic
+          .ScreenUpdating = True
+          .DisplayStatusBar = True
+          .EnableEvents = True
+          .DisplayAlerts = True
+        End With
+End Sub
