@@ -1,0 +1,9 @@
+Public Function AllClean(TextToReplace as string) as string
+Dim ObjRegex as Object
+Set ObjRegex = CreateObject("vbscript.regexp")
+With ObjRegex
+.Global = True
+.Pattern = "[^a-zA-Z0-9_.\s,#,,,',&,.]+"
+AllClean = .Replace(Replace(TextToReplace, "-", Chr(32)), vbNullString)
+End with
+End Function
