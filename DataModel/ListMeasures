@@ -1,0 +1,116 @@
+Option Explicit
+
+Sub List_DataModel_Measures()
+
+'Define Objects
+    Dim wb As Workbook
+    Dim wbNew As Workbook
+    Dim wsnew As Worksheet
+    Dim rng As Range
+    Dim dm As Model
+    Dim dmm As ModelMeasure
+
+'Define variables
+    Dim path As String
+    Dim fullpath As String
+    Dim i As Long                           'Count all fields in table
+    Dim x As Long                           'Loop through each field
+    Dim j As Long                           'Output row
+    Dim timestamp As String
+    Dim c As Long                           'Last column
+
+'Filename components for output file
+    timestamp = Format(Now(), "YYYYMMDD_HHMMSS")
+    Const prepath As String = "C:"
+    Const fileextension As String = ".xlsx"
+    path = Environ("Homepath")
+    fullpath = prepath & path
+    Const filename As String = "\Data Model Measures_"
+
+'Turn off Excel environment - speed things up
+    With Application
+      .Calculation = xlCalculationManual
+      .ScreenUpdating = False
+      .DisplayStatusBar = False
+      .EnableEvents = False
+      .DisplayAlerts = False
+    End With
+    
+'Initialize objects
+    Set wb = ThisWorkbook
+    Set dm = wb.Model
+    Set wbNew = Workbooks.Add
+    Set wsnew = wbNew.Worksheets(1)
+    
+'Document data model measure names and formulas
+    With dm
+        i = .ModelMeasures.Count
+        j = GetRows(ws:=wsnew) + 1
+        For x = 1 To i
+            wsnew.Cells(j, 1).Value = .ModelMeasures(x).Name
+            wsnew.Cells(j, 2).Value = .ModelMeasures(x).Formula
+            j = j + 1
+        Next x
+    End With
+
+'Headers
+    With wsnew
+        .Cells(1, 1).Value = "MeasureName"
+        .Cells(1, 2).Value = "MeasureFormula"
+    End With
+    
+'Format output file
+    'Freeze header row
+        With wsnew
+             .Activate
+             Application.Goto Reference:=Range("A1"), Scroll:=True
+             .Range("A2").Activate
+             ActiveWindow.FreezePanes = True
+        End With
+        
+    'Create range for header row
+        c = GetLastColumn(ws:=wsnew)
+        With wsnew
+            Set rng = .Range(.Cells(1, 1), .Cells(1, c))
+        End With
+
+    'Format header row
+        rng.Interior.Color = RGB(68, 84, 106)
+        rng.Font.Color = RGB(255, 255, 255)
+        
+    'Clear the rng
+        Set rng = Nothing
+        
+    'Create a new range for the used range
+        Set rng = wsnew.Range("A1").CurrentRegion
+        
+    'Autofit columnwidths
+        rng.Columns.AutoFit
+
+'Save output file
+    wbNew.SaveAs fullpath & filename & timestamp & fileextension
+
+'Close output file
+    wbNew.Close
+    
+'User messages
+    MsgBox "Output file saved: " & fullpath & filename & timestamp & fileextension
+
+'Tidy up
+    'Destroy objects
+        Set dm = Nothing
+        Set rng = Nothing
+        Set wsnew = Nothing
+        Set wbNew = Nothing
+        Set wb = Nothing
+        
+    'Restore Excel Environment
+        With Application
+          .Calculation = xlCalculationAutomatic
+          .ScreenUpdating = True
+          .DisplayStatusBar = True
+          .EnableEvents = True
+          .DisplayAlerts = True
+        End With
+End Sub
+
