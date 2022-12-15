@@ -6,6 +6,7 @@ Sub List_DataModel_Tables_Fields()
     Dim wb As Workbook
     Dim wbNew As Workbook
     Dim wsnew As Worksheet
+    Dim rng As Range
     Dim dm As Model
     Dim dmt As ModelTable
     Dim dmcn As ModelColumnName
@@ -18,6 +19,7 @@ Sub List_DataModel_Tables_Fields()
     Dim j As Long                           'Output row
     Dim timestamp As String
     Dim flag As Boolean
+    Dim c As Long                           'Last column
 
 'Filename components for output file
     timestamp = Format(Now(), "YYYYMMDD_HHMMSS")
@@ -69,6 +71,34 @@ Sub List_DataModel_Tables_Fields()
         .Cells(1, 2).Value = "ColumnName"
     End With
     
+'Format output file
+    'Freeze header row
+        With wsnew
+             .Activate
+             Application.Goto Reference:=Range("A1"), Scroll:=True
+             .Range("A2").Activate
+             ActiveWindow.FreezePanes = True
+        End With
+        
+    'Create range for header row
+        c = GetLastColumn(ws:=wsnew)
+        With wsnew
+            Set rng = .Range(.Cells(1, 1), .Cells(1, c))
+        End With
+
+    'Format header row
+        rng.Interior.Color = RGB(68, 84, 106)
+        rng.Font.Color = RGB(255, 255, 255)
+        
+    'Clear the rng
+        Set rng = Nothing
+        
+    'Create a new range for the used range
+        Set rng = wsnew.Range("A1").CurrentRegion
+        
+    'Autofit columnwidths
+        rng.Columns.AutoFit
+
 'Save output file
     Debug.Print fullpath & filename & timestamp & fileextension
     wbNew.SaveAs fullpath & filename & timestamp & fileextension
@@ -82,6 +112,7 @@ Sub List_DataModel_Tables_Fields()
 'Tidy up
     'Destroy objects
         Set dm = Nothing
+        Set rng = Nothing
         Set wsnew = Nothing
         Set wbNew = Nothing
         Set wb = Nothing
