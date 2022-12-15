@@ -5,3 +5,7 @@ With ws
      .Range("A2").Activate
      ActiveWindow.FreezePanes = True
 End With
+
+'Format header row
+rng.Interior.Color = RGB(68, 84, 106)
+rng.Font.Color = RGB(255, 255, 255)
