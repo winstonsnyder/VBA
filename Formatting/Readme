@@ -1,0 +1,7 @@
+'Freeze Row 1
+With ws
+     .Activate
+     Application.Goto Reference:=Range("A1"), Scroll:=True
+     .Range("A2").Activate
+     ActiveWindow.FreezePanes = True
+End With
