@@ -9,3 +9,12 @@ End With
 'Format header row
 rng.Interior.Color = RGB(68, 84, 106)
 rng.Font.Color = RGB(255, 255, 255)
+
+'Clear the rng
+        Set rng = Nothing
+        
+    'Create a new range for the used range
+        Set rng = wsnew.Range("A1").CurrentRegion
+        
+    'Autofit columnwidths
+        rng.Columns.AutoFit
