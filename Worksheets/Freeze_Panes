@@ -1,0 +1,18 @@
+  'Define a range in A1 notation where the Freeze Pane should be placed. Ex Range("G5")
+  With rng
+                        r = .Row
+                        c = .Column
+                    End With
+                   
+                    ws.Activate
+                    With ActiveWindow
+                        If .FreezePanes Then
+                            .FreezePanes = False
+                        End If
+                        .SplitColumn = c
+                        .SplitRow = r
+                        .FreezePanes = True
+                    End With
+                    
+                    Application.Goto Reference:=ws.Range("A1"), _
+                    scroll:=True
