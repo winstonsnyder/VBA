@@ -1,1 +1,28 @@
-
+Public Function Get_Subfolder(xpath As String, _
+                              xfolder As String) As Boolean
+                              
+    'Parameters:
+    'xpath as a string. Required.
+    'xfolder as a string. Required.
+                              
+    'Objects
+        Dim fso As Object
+        
+    'Variables
+        Dim path_full As String
+        
+    'Initialize objects
+        Set fso = CreateObject("Scripting.FileSystemObject")
+        
+    'Build folder path
+        path_full = xpath & xfolder
+       
+    'Check if the folder exists in the context, if not, create the folder
+        If Not fso.folderexists(path_full) Then
+            fso.createfolder path_full
+        End If
+        
+    'Return
+        Get_Subfolder = True
+                  
+End Function
