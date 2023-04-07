@@ -1,1 +1,11 @@
+Public Function Get_Monday_Date(xdate As Date) As Date
 
+    'Returns a date as a date value
+    'Parmeters : xdate as a date, Required.
+
+    'FirstDayOfWeek Enum
+    'https://learn.microsoft.com/en-us/dotnet/api/microsoft.visualbasic.firstdayofweek?view=net-7.0
+    
+    Get_Monday_Date = xdate - Weekday(xdate, vbMonday) + 1
+
+End Function
