@@ -1,0 +1,157 @@
+'Save workook as CSV file
+'Save_NationalBudget_CSV  <- Sub
+'fxSaveToCSV              <- Function
+'Get_UserProfile          <- Function
+'Get_Subfolder            <- Function
+'-------------------------------------
+'
+'
+Sub Save_NationalBudget_CSV()
+
+    Dim wb As Workbook
+    Dim wbNew As Workbook
+    Dim ws As Worksheet
+    Dim wsNew As Worksheet
+    Dim rng As Range
+    Dim rngNew As Range
+    
+    'Variables
+        Dim blnSaved As Boolean
+        
+    'Constants
+        Const thisfile As String = "National_Budget"
+    
+    'Initialize
+        Set wb = ThisWorkbook
+        Set ws = wb.Worksheets("National_Budget")
+        Set rng = ws.Range("A1").CurrentRegion
+        
+        Set wbNew = Workbooks.Add
+        Set wsNew = wbNew.Worksheets(1)
+        Set rngNew = wsNew.Range("A1")
+    
+    'Shut down Excel Environment - speed things up
+        With Application
+            .Calculation = xlCalculationManual
+            .ScreenUpdating = False
+            .DisplayStatusBar = False
+            .EnableEvents = False
+            .DisplayAlerts = False
+        End With
+    
+    rng.Copy
+    rngNew.PasteSpecial xlPasteValuesAndNumberFormats
+    
+    'Save
+        blnSaved = fxSaveToCSV(xwb:=wbNew, _
+                               xfilename:=thisfile)
+                               
+    'Close the new file
+        wbNew.Close
+    
+    'User messages
+        MsgBox "File saved status: " & blnSaved
+        
+    'Tidy up
+        'Detroy objects
+            Set rngNew = Nothing
+            Set wsNew = Nothing
+            Set wbNew = Nothing
+            
+            Set rng = Nothing
+            Set ws = Nothing
+            Set wb = Nothing
+            
+        'Restore Excel Environment
+            With Application
+                .Calculation = xlCalculationAutomatic
+                .ScreenUpdating = True
+                .DisplayStatusBar = True
+                .EnableEvents = True
+                .DisplayAlerts = True
+            End With
+
+
+End Sub
+
+Public Function fxSaveToCSV(xwb As Workbook, _
+                            xfilename As String) As Boolean
+
+    'Objects
+    
+    'Variables
+        Dim xpath As String
+        Dim xfolderexists As Boolean
+        
+    'Constants
+        Const xfolder As String = "GCS"
+        Const xextension As String = ".csv"
+        
+    'Set function value
+        fxSaveToCSV = False
+
+    'Get user profile
+        xpath = Get_UserProfile
+
+    'Check path exists
+        xfolderexists = Get_Subfolder(zpath:=xpath, _
+                                      zfolder:=xfolder)
+    'Save file
+        xwb.SaveAs Filename:=xpath & xfolder & "\" & _
+                             xfilename & _
+                             xextension, _
+                   FileFormat:=xlCSV
+                     
+    'Update function value
+        fxSaveToCSV = True
+                                      
+End Function
+
+Public Function Get_UserProfile() As String
+
+    'Objects
+        Dim fso As Object
+    
+    'Initialize objects
+        Set fso = CreateObject("Scripting.FileSystemObject")
+    
+    'Get the path for the user profile
+        Get_UserProfile = Environ("UserProfile") & "\"
+        
+    'Tidy up
+        Set fso = Nothing
+
+End Function
+
+
+
+Public Function Get_Subfolder(zpath As String, _
+                              zfolder As String) As Boolean
+                              
+    'Parameters:
+    'xpath as a string. Required.
+    'xfolder as a string. Required.
+                              
+    'Objects
+        Dim fso As Object
+        
+    'Variables
+        Dim path_full As String
+        
+    'Initialize objects
+        Set fso = CreateObject("Scripting.FileSystemObject")
+        
+    'Build folder path
+        path_full = zpath & zfolder
+       
+    'Check if the folder exists in the context, if not, create the folder
+        If Not fso.folderexists(path_full) Then
+            fso.createfolder path_full
+        End If
+        
+    'Return
+        Get_Subfolder = True
+                  
+End Function
+
+
