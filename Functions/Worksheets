@@ -1,0 +1,11 @@
+'Functions in this module
+'------------------------
+'GetLastRow
+'------------------------
+'------------------------
+Public Function GetLastRow(ws As Worksheet, _
+                           Optional ByVal colnbr As Integer = 1) As Integer
+                           
+GetLastRow = ws.Cells(Rows.Count, colnbr).End(xlUp).Row
+      
+End Function
