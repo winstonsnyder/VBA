@@ -1,0 +1,32 @@
+'FillRangeUp
+
+
+Sub FillRangeUp()
+
+    Dim wb As Workbook
+    Dim ws As Worksheet
+    Dim i As Integer
+    Dim j As Integer
+    Dim Country As String
+    
+    Set wb = ThisWorkbook
+    Set ws = wb.Worksheets("Sheet1")
+    
+    i = GetLastRow(ws:=ws)
+    For j = i To 2 Step -1
+        With ws
+            If IsEmpty(.Cells(j, 1)) Then
+                .Cells(j, 1).Value = Country
+            Else
+                Country = .Cells(j, 1).Value
+            End If
+        End With
+    Next j
+    
+    Set ws = Nothing
+    Set wb = Nothing
+    
+    
+    
+    
+End Sub
