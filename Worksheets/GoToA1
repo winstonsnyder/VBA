@@ -1,0 +1,5 @@
+Public Sub GoToSheet(ws As Worksheet)
+    Application.Goto Reference:=ws.Range("A1"), _
+                     Scroll:=True
+                 
+End Sub
