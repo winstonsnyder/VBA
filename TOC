@@ -1,0 +1,55 @@
+'Subs and Functions:
+'1. TOCInfo_list_sheets
+'2. add_sheet_to_workbook
+'3.
+
+
+Private Sub TOCInfo_list_sheets(wb As Workbook, _
+                                sheetname As String)
+                                
+    Dim ws As Worksheet
+    Dim rng As Range
+    Dim i As Long
+    Dim headerrow As Long
+    
+    Set ws = wb.Worksheets(sheetname)
+    
+    'Get last row on sheet
+        i = GetLastRow(ws:=ws, _
+                       colnbr:=2)
+        If i = 1 Then
+            i = i + 2
+            ws.Range(.Cells(2, 2), .Cells(2, 2)).Value = "Sheet Name"
+            ws.Range(.Cells(2, 3), .Cells(2, 3)).Value = "Purpose"
+        Else
+            i = i + 1
+        End If
+        
+    'List all sheets in the workbook
+        For Each ws In wb.Worksheets
+            ws.Range(.Cells(i, 2), .Cells(i, 2)).Value = ws.Name
+            i = i + 1
+        Next ws
+        
+    'Remove any duplicate sheet names
+        'Get last row on sheet
+            i = GetLastRow(ws:=ws, _
+                           colnbr:=2)
+                           
+        'Get the current region
+            With ws
+                Set rng = .Range(.Cells(i, 2)).CurrentRegion
+            End With
+            
+        'Get just the first column of the region
+            Set rng = rng.Columns(1)
+            
+        'Remove any duplicates from the region
+            rng.RemoveDuplicates
+        
+    'Freeze panes
+    
+    'Tidy up
+        Set ws = Nothing
+
+End Sub
