@@ -1,1 +1,28 @@
+Public Function ReplaceSpecialChars(dirty_string As String) As String
+
+    'Objects
+        Dim regex As Object
+        
+    'Constants
+        Const replacement_string As String = "_"
+        Const repattern_string As String = "[^A-Za-z0-9]"
+        
+    'Initialize regex object
+        Set regex = CreateObject("vbscript.regexp") 'Late Binding
+
+    ' Configure regex object
+        With regex
+            .Global = True
+            .MultiLine = True
+            .IgnoreCase = False
+            .Pattern = repattern_string
+        End With
+        
+    'Replace special chars with underscore(_)
+        ReplaceSpecialChars = regex.Replace(dirty_string, replacement_string)
+        
+    'Tidy up
+        Set regex = Nothing
+        
+End Function
 
