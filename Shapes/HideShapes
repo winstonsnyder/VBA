@@ -1,0 +1,23 @@
+Sub hide()
+    ' Type 25 is a slicer
+    Dim wb As Workbook
+    Dim ws As Worksheet
+    Dim s As Integer
+    Dim i As Integer
+    
+    Set wb = ThisWorkbook
+    Set ws = wb.ActiveSheet
+    s = ActiveSheet.Shapes.Count
+    
+    For i = 1 To s
+        If ActiveSheet.Shapes(i).Type <> 25 Then ActiveSheet.Shapes(i).Visible = False
+    Next i
+    
+    ws.Shapes("Rounded Rectangle 7").Visible = True
+    ws.Shapes("Rounded Rectangle 8").Visible = True
+    
+    
+    Set ws = Nothing
+    Set wb = Nothing
+    
+End Sub
