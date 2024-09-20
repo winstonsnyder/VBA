@@ -1,0 +1,19 @@
+Sub unhide()
+    ' Type 25 is a slicer
+    Dim wb As Workbook
+    Dim ws As Worksheet
+    Dim s As Integer
+    Dim i As Integer
+    
+    Set wb = ThisWorkbook
+    Set ws = wb.ActiveSheet
+    s = ActiveSheet.Shapes.Count
+    
+    For i = 1 To s
+        ActiveSheet.Shapes(i).Visible = True
+    Next i
+    
+    Set ws = Nothing
+    Set wb = Nothing
+    
+End Sub
