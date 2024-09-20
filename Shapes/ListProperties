@@ -1,0 +1,20 @@
+Sub shapestuff()
+
+    'List shape properties to immediate window
+
+    Dim wb As Workbook
+    Dim ws As Worksheet
+    Dim shp As Shape
+    
+    Set wb = ThisWorkbook
+    Set ws = wb.ActiveSheet
+    
+    With ws
+        For Each shp In .Shapes
+            Debug.Print shp.Name, shp.Type
+        Next shp
+    End With
+    
+    Set ws = Nothing
+    Set wb = Nothing
+End Sub
