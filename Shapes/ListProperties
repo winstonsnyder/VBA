@@ -1,4 +1,4 @@
-Sub shapestuff()
+Sub shapeproperties()
 
     'List shape properties to immediate window
 
