@@ -1,0 +1,39 @@
+'Update email subject line
+Public Sub UpdateSubject()
+    Dim objExplorer As Outlook.Explorer
+    Dim objSelection As Outlook.Selection
+    Dim objItem As Object
+    Dim currentSubject As String
+    Dim newSubject As String
+    
+    ' Get the active explorer (the main Outlook window) and selected items
+    Set objExplorer = Application.ActiveExplorer
+    Set objSelection = objExplorer.Selection
+    
+    ' Check if there is a selection
+    If objSelection.Count > 0 Then
+        ' Loop through each selected item (allows updating multiple emails at once)
+        For Each objItem In objSelection
+            ' Ensure the item is a MailItem (email) before proceeding
+            If TypeOf objItem Is Outlook.MailItem Then
+                currentSubject = objItem.Subject
+                
+                ' Prompt the user for a new subject
+                newSubject = InputBox("Enter the new subject for the email:", "Update Email Subject", currentSubject)
+                
+                ' Check if the user entered text and did not hit Cancel (InputBox returns empty string on Cancel)
+                If newSubject <> "" Then
+                    objItem.Subject = newSubject
+                    objItem.Save
+                End If
+            End If
+        Next objItem
+    Else
+        MsgBox "Please select an email first.", vbInformation, "No Selection"
+    End If
+    
+    ' Clean up
+    Set objItem = Nothing
+    Set objSelection = Nothing
+    Set objExplorer = Nothing
+End Sub
